@@ -9,35 +9,35 @@ describe('logic - host game', () => {
         mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })
     })
 
-    let name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, game_status
+    let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, status
     let hostId, validHost
 
     beforeEach(() => {
 
         name = `gameName-${Math.random()}`
-        max_players = Number((Math.random() * (6 - 4) + 4).toFixed())
-        initial_stack = Number(Math.random().toFixed())
-        initial_bb = Number((Math.random() * (50 - 25) + 25).toFixed())
-        initial_sb = Number((Math.random() * (50 - 25) + 25).toFixed())
-        blinds_increase = Number(Math.random().toFixed())
+        maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
+        initialStack = Number(Math.random().toFixed())
+        initialBB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        initialSB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        blindsIncrease = Number(Math.random().toFixed())
         hostId = new mongoose.Types.ObjectId
         validHost = String(hostId)
     })
 
     it('should succeed on correct data', async () => {
         const result = await logic.hostGame(
-            name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, validHost
+            name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, validHost
         )
         expect(result).to.exist
 
         const retrievedGame = await Game.findById(result)
         expect(retrievedGame).to.exist
         expect(retrievedGame.name).to.equal(name)
-        expect(retrievedGame.max_players).to.equal(max_players)
-        expect(retrievedGame.initial_stack).to.equal(initial_stack)
-        expect(retrievedGame.initial_bb).to.equal(initial_bb)
-        expect(retrievedGame.initial_sb).to.equal(initial_sb)
-        expect(retrievedGame.blinds_increase).to.equal(blinds_increase)
+        expect(retrievedGame.maxPlayers).to.equal(maxPlayers)
+        expect(retrievedGame.initialStack).to.equal(initialStack)
+        expect(retrievedGame.initialBB).to.equal(initialBB)
+        expect(retrievedGame.initialSB).to.equal(initialSB)
+        expect(retrievedGame.blindsIncrease).to.equal(blindsIncrease)
         expect(String(retrievedGame.host)).to.equal(validHost)
         expect(String(retrievedGame.players[0].user)).to.equal(validHost)
         expect(String(retrievedGame.status)).to.equal('open')
@@ -46,10 +46,10 @@ describe('logic - host game', () => {
     it('should fail if game already exists', async () => {
 
         await Game.deleteMany()
-        const game = await Game.create({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase, validHost })
+        const game = await Game.create({ name, maxPlayers, initialStack, initialBB, initialSB, currentBB: initialBB, currentSB: initialSB, blindsIncrease, validHost })
 
         try {
-            await logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, validHost)
+            await logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, validHost)
         } catch (error) {
             expect(error).to.exist
             expect(error.message).to.equal('Game already exists.')
@@ -59,121 +59,121 @@ describe('logic - host game', () => {
 
     it('should fail on empty name', () => {
         expect(() =>
-            logic.hostGame('', max_players, initial_stack, initial_bb, initial_sb, blinds_increase, hostId)
+            logic.hostGame('', maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, hostId)
         ).to.throw(Error, 'name is empty or blank')
     })
 
     it('should fail on undefined name', () => {
         expect(() =>
-            logic.hostGame(undefined, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, hostId)
+            logic.hostGame(undefined, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, hostId)
         ).to.throw(Error, `name with value undefined is not a string`)
     })
 
     it('should fail on non-valid data type for name', () => {
         expect(() =>
-            logic.hostGame(123, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, hostId)
+            logic.hostGame(123, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, hostId)
         ).to.throw(Error, `name with value 123 is not a string`)
     })
 
-    it('should fail on empty max_players', () => {
+    it('should fail on empty maxPlayers', () => {
         expect(() =>
-            logic.hostGame(name, '', initial_stack, initial_bb, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, 'max_players is empty or blank')
+            logic.hostGame(name, '', initialStack, initialBB, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, 'maxPlayers is empty or blank')
     })
 
     it('should fail on undefined name', () => {
         expect(() =>
-            logic.hostGame(name, undefined, initial_stack, initial_bb, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, `max_players with value undefined is not a number`)
+            logic.hostGame(name, undefined, initialStack, initialBB, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, `maxPlayers with value undefined is not a number`)
     })
 
     it('should fail on non-valid data type for name', () => {
         expect(() =>
-            logic.hostGame(name, 'blablabla', initial_stack, initial_bb, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, `max_players with value blablabla is not a number`)
+            logic.hostGame(name, 'blablabla', initialStack, initialBB, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, `maxPlayers with value blablabla is not a number`)
     })
 
-    it('should fail on empty initial_stack', () => {
+    it('should fail on empty initialStack', () => {
         expect(() =>
-            logic.hostGame(name, max_players, '', initial_bb, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, 'initial_stack is empty or blank')
+            logic.hostGame(name, maxPlayers, '', initialBB, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, 'initialStack is empty or blank')
     })
 
-    it('should fail on undefined initial_stack', () => {
+    it('should fail on undefined initialStack', () => {
         expect(() =>
-            logic.hostGame(name, max_players, undefined, initial_bb, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, `initial_stack with value undefined is not a number`)
+            logic.hostGame(name, maxPlayers, undefined, initialBB, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, `initialStack with value undefined is not a number`)
     })
 
-    it('should fail on non-valid data type for initial_stack', () => {
+    it('should fail on non-valid data type for initialStack', () => {
         expect(() =>
-            logic.hostGame(name, max_players, 'blablabla', initial_bb, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, `initial_stack with value blablabla is not a number`)
+            logic.hostGame(name, maxPlayers, 'blablabla', initialBB, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, `initialStack with value blablabla is not a number`)
     })
 
-    it('should fail on empty initial_bb', () => {
+    it('should fail on empty initialBB', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, '', initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, 'initial_bb is empty or blank')
+            logic.hostGame(name, maxPlayers, initialStack, '', initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, 'initialBB is empty or blank')
     })
 
-    it('should fail on undefined initial_bb', () => {
+    it('should fail on undefined initialBB', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, undefined, initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, `initial_bb with value undefined is not a number`)
+            logic.hostGame(name, maxPlayers, initialStack, undefined, initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, `initialBB with value undefined is not a number`)
     })
 
-    it('should fail on non-valid data type for initial_bb', () => {
+    it('should fail on non-valid data type for initialBB', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, 'blablabla', initial_sb, blinds_increase, hostId)
-        ).to.throw(Error, `initial_bb with value blablabla is not a number`)
+            logic.hostGame(name, maxPlayers, initialStack, 'blablabla', initialSB, blindsIncrease, hostId)
+        ).to.throw(Error, `initialBB with value blablabla is not a number`)
     })
 
-    it('should fail on empty initial_sb', () => {
+    it('should fail on empty initialSB', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, '', blinds_increase, hostId)
-        ).to.throw(Error, 'initial_sb is empty or blank')
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, '', blindsIncrease, hostId)
+        ).to.throw(Error, 'initialSB is empty or blank')
     })
 
-    it('should fail on undefined initial_sb', () => {
+    it('should fail on undefined initialSB', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, undefined, blinds_increase, hostId)
-        ).to.throw(Error, `initial_sb with value undefined is not a number`)
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, undefined, blindsIncrease, hostId)
+        ).to.throw(Error, `initialSB with value undefined is not a number`)
     })
 
-    it('should fail on non-valid data type for initial_sb', () => {
+    it('should fail on non-valid data type for initialSB', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, 'blablabla', blinds_increase, hostId)
-        ).to.throw(Error, `initial_sb with value blablabla is not a number`)
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, 'blablabla', blindsIncrease, hostId)
+        ).to.throw(Error, `initialSB with value blablabla is not a number`)
     })
 
-    it('should fail on empty blinds_increase', () => {
+    it('should fail on empty blindsIncrease', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, '', hostId)
-        ).to.throw(Error, 'blinds_increase is empty or blank')
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, '', hostId)
+        ).to.throw(Error, 'blindsIncrease is empty or blank')
     })
 
-    it('should fail on undefined blinds_increase', () => {
+    it('should fail on undefined blindsIncrease', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, undefined, hostId)
-        ).to.throw(Error, `blinds_increase with value undefined is not a number`)
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, undefined, hostId)
+        ).to.throw(Error, `blindsIncrease with value undefined is not a number`)
     })
 
-    it('should fail on non-valid data type for blinds_increase', () => {
+    it('should fail on non-valid data type for blindsIncrease', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, 'blablabla', hostId)
-        ).to.throw(Error, `blinds_increase with value blablabla is not a number`)
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, 'blablabla', hostId)
+        ).to.throw(Error, `blindsIncrease with value blablabla is not a number`)
     })
 
     it('should fail on empty host', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, '')
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, '')
         ).to.throw(Error, 'host ID is empty or blank')
     })
 
     it('should fail on undefined host', () => {
         expect(() =>
-            logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, undefined)
+            logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, undefined)
         ).to.throw(Error, `host ID with value undefined is not a valid ObjectId`)
     })
 

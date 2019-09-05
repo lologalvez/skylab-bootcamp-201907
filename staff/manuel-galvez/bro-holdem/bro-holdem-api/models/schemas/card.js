@@ -17,7 +17,7 @@ module.exports = new Schema({
         required: true
     },
 
-    card_image: {
+    image: {
         type: String,
         required: true,
     }

@@ -7,22 +7,22 @@ module.exports = new Schema({
         required: true
     },
 
-    dealer_pos: {
+    dealerPos: {
         type: Number,
         required: true
     },
 
-    bb_pos: {
+    bbPos: {
         type: Number,
         required: true
     },
 
-    sb_pos: {
+    sbPos: {
         type: Number,
         required: true
     },
 
-    turn_pos: {
+    turnPos: {
         type: Number,
         required: true
     },
@@ -32,12 +32,12 @@ module.exports = new Schema({
         required: true
     },
 
-    used_cards: {
+    usedCards: {
         type: Array,
         default: []
     },
 
-    table_cards: {
+    tableCards: {
         type: Array,
         default: []
     }

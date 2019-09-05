@@ -12,7 +12,7 @@ describe('logic - start game', () => {
 
     let username, email, password, hostId
     let username2, email2, password2, joinerId
-    let name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase
+    let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease
     let gameId
 
     beforeEach(() => {
@@ -30,11 +30,11 @@ describe('logic - start game', () => {
 
         // Game
         name = `gameName-${Math.random()}`
-        max_players = Number((Math.random() * (6 - 4) + 4).toFixed())
-        initial_stack = Number(Math.random().toFixed())
-        initial_bb = Number((Math.random() * (50 - 25) + 25).toFixed())
-        initial_sb = Number((Math.random() * (50 - 25) + 25).toFixed())
-        blinds_increase = Number(Math.random().toFixed())
+        maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
+        initialStack = Number(Math.random().toFixed())
+        initialBB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        initialSB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        blindsIncrease = Number(Math.random().toFixed())
 
 
         return (async () => {
@@ -48,17 +48,17 @@ describe('logic - start game', () => {
             joinerId = joiner.id
 
             // Replicate host game (create new game and add host as a player)
-            const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase })
+            const newGame = new Game({ name, maxPlayers, initialStack, initialBB, initialSB, currentBB: initialBB, currentSB: initialSB, blindsIncrease })
             gameId = newGame.id
             newGame.host = hostId
 
             // Create new instance of player for host
             const newPlayer = new Player({
                 position: newGame.players.length,
-                current_stack: initial_stack,
+                currentStack: initialStack,
                 cards: [],
-                in_hand: false,
-                bet_amount: 0
+                inHand: false,
+                betAmount: 0
             })
             newPlayer.user = hostId
             newGame.players.push(newPlayer)
@@ -66,10 +66,10 @@ describe('logic - start game', () => {
             // Create new instance of player for joiner
             const newPlayer2 = new Player({
                 position: newGame.players.length,
-                current_stack: initial_stack,
+                currentStack: initialStack,
                 cards: [],
-                in_hand: false,
-                bet_amount: 0
+                inHand: false,
+                betAmount: 0
             })
             newPlayer2.user = joinerId
             newGame.players.push(newPlayer2)
@@ -87,14 +87,14 @@ describe('logic - start game', () => {
         expect(retrievedGame.status).to.equal('playing')
         expect(retrievedGame.hands.length).to.equal(1)
         expect(retrievedGame.hands[0].pot).to.equal(0)
-        expect(retrievedGame.hands[0].dealer_pos).to.equal(0)
-        expect(retrievedGame.hands[0].bb_pos).to.equal(1)
-        expect(retrievedGame.hands[0].sb_pos).to.equal(0)
-        expect(retrievedGame.hands[0].turn_pos).to.equal(1)
-        expect(retrievedGame.hands[0].used_cards.length).to.equal(7)
-        expect(retrievedGame.hands[0].table_cards.length).to.equal(3)
-        expect(retrievedGame.players[0].in_hand).to.equal(true)
-        expect(retrievedGame.players[1].in_hand).to.equal(true)
+        expect(retrievedGame.hands[0].dealerPos).to.equal(0)
+        expect(retrievedGame.hands[0].bbPos).to.equal(1)
+        expect(retrievedGame.hands[0].sbPos).to.equal(0)
+        expect(retrievedGame.hands[0].turnPos).to.equal(1)
+        expect(retrievedGame.hands[0].usedCards.length).to.equal(7)
+        expect(retrievedGame.hands[0].tableCards.length).to.equal(3)
+        expect(retrievedGame.players[0].inHand).to.equal(true)
+        expect(retrievedGame.players[1].inHand).to.equal(true)
         expect(retrievedGame.players[0].cards.length).to.equal(2)
         expect(retrievedGame.players[1].cards.length).to.equal(2)
     })

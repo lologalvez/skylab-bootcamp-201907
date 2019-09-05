@@ -6,7 +6,7 @@ module.exports = new Schema({
         required: true
     },
 
-    current_stack: {
+    currentStack: {
         type: Number,
         required: true
     },
@@ -15,12 +15,12 @@ module.exports = new Schema({
         required: true
     },
 
-    in_hand: {
+    inHand: {
         type: Boolean,
         required: true
     },
 
-    bet_amount: {
+    betAmount: {
         type: Number,
         required: true,
         default: 0

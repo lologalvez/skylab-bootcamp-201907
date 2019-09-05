@@ -24,7 +24,7 @@ module.exports = function (gameId, userId) {
         if (!game) throw Error(`Game with id ${gameId} does not exist.`)
 
         // Check if table is full
-        if (game.players.length === game.max_players) throw Error(`Game room is full.`)
+        if (game.players.length === game.maxPlayers) throw Error(`Game room is full.`)
 
         // Check if game's already started
         if (game.status === 'playing') throw Error(`Game's already started.`)
@@ -33,10 +33,10 @@ module.exports = function (gameId, userId) {
         // Create new instance of player
         const newPlayer = new Player({
             position: game.players.length,
-            current_stack: game.initial_stack,
+            currentStack: game.initialStack,
             cards: [],
-            in_hand: false,
-            bet_amount: 0
+            inHand: false,
+            betAmount: 0
         })
         newPlayer.user = userId
 

@@ -9,7 +9,7 @@ describe('logic - join game', () => {
 
     let username, email, password, hostId
     let username2, email2, password2, joinerId
-    let name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase
+    let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease
     let gameId
 
     beforeEach(() => {
@@ -26,11 +26,11 @@ describe('logic - join game', () => {
 
         // Game
         name = `gameName-${Math.random()}`
-        max_players = Number((Math.random() * (6 - 4) + 4).toFixed())
-        initial_stack = Number(Math.random().toFixed())
-        initial_bb = Number((Math.random() * (50 - 25) + 25).toFixed())
-        initial_sb = Number((Math.random() * (50 - 25) + 25).toFixed())
-        blinds_increase = Number(Math.random().toFixed())
+        maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
+        initialStack = Number(Math.random().toFixed())
+        initialBB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        initialSB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        blindsIncrease = Number(Math.random().toFixed())
 
 
         return (async () => {
@@ -44,17 +44,17 @@ describe('logic - join game', () => {
             joinerId = joiner.id
 
             // Replicate host game (create new game and add host as a player)
-            const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase })
+            const newGame = new Game({ name, maxPlayers, initialStack, initialBB, initialSB, currentBB: initialBB, currentSB: initialSB, blindsIncrease })
             gameId = newGame.id
             newGame.host = hostId
 
             // Create new instance of player
             const newPlayer = new Player({
                 position: newGame.players.length,
-                current_stack: initial_stack,
+                currentStack: initialStack,
                 cards: [],
-                in_hand: false,
-                bet_amount: 0
+                inHand: false,
+                betAmount: 0
             })
             newPlayer.user = hostId
             newGame.players.push(newPlayer)
@@ -96,7 +96,7 @@ describe('logic - join game', () => {
 
     it('should fail if the playing room is full', async () => {
         const game = await Game.findById(gameId)
-        game.max_players = 1
+        game.maxPlayers = 1
         await game.save()
 
         try {

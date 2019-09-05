@@ -5,24 +5,24 @@ const { Game, Player } = require('../../../models')
 /**
 * 
 * @param {*} name 
-* @param {*} max_players 
-* @param {*} initial_stack 
-* @param {*} initial_bb 
-* @param {*} initial_sb 
-* @param {*} blinds_increase 
+* @param {*} maxPlayers 
+* @param {*} initialStack 
+* @param {*} initialBB 
+* @param {*} initialSB 
+* @param {*} blindsIncrease 
 * @param {*} hostId 
 * 
 * @returns {Promise}
 */
 
-module.exports = function (name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, hostId) {
+module.exports = function (name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, hostId) {
 
     validate.string(name, 'name')
-    validate.number(max_players, 'max_players')
-    validate.number(initial_stack, 'initial_stack')
-    validate.number(initial_bb, 'initial_bb')
-    validate.number(initial_sb, 'initial_sb')
-    validate.number(blinds_increase, 'blinds_increase')
+    validate.number(maxPlayers, 'maxPlayers')
+    validate.number(initialStack, 'initialStack')
+    validate.number(initialBB, 'initialBB')
+    validate.number(initialSB, 'initialSB')
+    validate.number(blindsIncrease, 'blindsIncrease')
     validate.objectId(hostId, 'host ID')
 
     return (async () => {
@@ -30,17 +30,17 @@ module.exports = function (name, max_players, initial_stack, initial_bb, initial
         if (game) throw Error('Game already exists.')
 
         // Create game
-        const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase })
+        const newGame = new Game({ name, maxPlayers, initialStack, initialBB, initialSB, currentBB: initialBB, currentSB: initialSB, blindsIncrease })
         const gameId = newGame.id
         newGame.host = hostId
 
         // Create new instance of player
         const newPlayer = new Player({
             position: newGame.players.length,
-            current_stack: newGame.initial_stack,
+            currentStack: newGame.initialStack,
             cards: [],
-            in_hand: false,
-            bet_amount: 0
+            inHand: false,
+            betAmount: 0
         })
         newPlayer.user = hostId
 

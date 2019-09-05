@@ -8,22 +8,22 @@ module.exports = new Schema({
         required: true
     },
 
-    player_stack: {
+    playerStack: {
         type: Number,
         required: true,
     },
 
-    player_pos: {
+    playerPos: {
         type: Number,
         required: true,
     },
 
-    player_cards: {
+    playerCards: {
         type: Array,
         required: true,
     },
 
-    bet_amount: {
+    betAmount: {
         type: Number,
         required: true
     },

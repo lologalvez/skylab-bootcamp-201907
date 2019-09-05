@@ -28,10 +28,10 @@ module.exports = function (gameId) {
         // Deal first hand
         const newHand = new Hand({
             pot: 0,
-            dealer_pos: 0,
-            bb_pos: game.players.length - 1,
-            sb_pos: game.players.length - 2,
-            turn_pos: 1,
+            dealerPos: 0,
+            bbPos: game.players.length - 1,
+            sbPos: game.players.length - 2,
+            turnPos: 1,
             round: 0
         })
 
@@ -41,10 +41,10 @@ module.exports = function (gameId) {
         for (i = 0; i < 3; i++) {
             do {
                 randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
-                match = newHand.used_cards.includes(randomNum)
+                match = newHand.usedCards.includes(randomNum)
             } while (match)
-            newHand.table_cards.push(randomNum)
-            newHand.used_cards.push(randomNum)
+            newHand.tableCards.push(randomNum)
+            newHand.usedCards.push(randomNum)
         }
 
         // Players setup and dealing
@@ -54,18 +54,18 @@ module.exports = function (gameId) {
             for (i = 0; i < 2; i++) {
                 do {
                     randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
-                    match = newHand.used_cards.includes(randomNum)
+                    match = newHand.usedCards.includes(randomNum)
                 } while (match)
                 player.cards.push(randomNum)
-                newHand.used_cards.push(randomNum)
+                newHand.usedCards.push(randomNum)
             }
 
             // Status
-            player.in_hand = true
+            player.inHand = true
 
             // Blinds
-            if (player.position === newHand.bb_pos) player.bet_amount = game.current_bb
-            if (player.position === newHand.sb_pos) player.bet_amount = game.current_sb
+            if (player.position === newHand.bbPos) player.betAmount = game.currentBB
+            if (player.position === newHand.sbPos) player.betAmount = game.currentSB
 
         })
 

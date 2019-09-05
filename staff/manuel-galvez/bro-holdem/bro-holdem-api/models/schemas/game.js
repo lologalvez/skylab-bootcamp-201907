@@ -9,38 +9,38 @@ module.exports = new Schema({
         required: true
     },
 
-    max_players: {
+    maxPlayers: {
         type: Number,
         required: true
     },
 
-    initial_stack: {
+    initialStack: {
         type: Number,
         required: true
     },
 
-    initial_bb: {
+    initialBB: {
         type: Number,
         required: true,
     },
 
-    initial_sb: {
+    initialSB: {
         type: Number,
         required: true
     },
 
-    blinds_increase: {
+    blindsIncrease: {
         type: Number,
         required: true,
         default: false
     },
 
-    current_bb: {
+    currentBB: {
         type: Number,
         default: 0
     },
 
-    current_sb: {
+    currentSB: {
         type: Number,
         default: 0
     },
