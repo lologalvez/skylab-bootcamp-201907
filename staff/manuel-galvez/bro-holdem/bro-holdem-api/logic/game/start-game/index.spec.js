@@ -13,9 +13,10 @@ describe('logic - start game', () => {
     let username, email, password, hostId
     let username2, email2, password2, joinerId
     let name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase
-    let gameId, validHost
+    let gameId
 
     beforeEach(() => {
+
         // User 1: Host
         username = `username-${Math.random()}`
         email = `email-${Math.random()}@email.com`

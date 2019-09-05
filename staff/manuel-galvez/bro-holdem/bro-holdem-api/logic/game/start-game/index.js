@@ -64,9 +64,9 @@ module.exports = function (gameId) {
             player.in_hand = true
 
             // Blinds
-            if (player.position === newHand.bb_pos) {
+            if (player.position === newHand.bb_pos) player.bet_amount = game.current_bb
+            if (player.position === newHand.sb_pos) player.bet_amount = game.current_sb
 
-            }
         })
 
         game.hands.push(newHand)
