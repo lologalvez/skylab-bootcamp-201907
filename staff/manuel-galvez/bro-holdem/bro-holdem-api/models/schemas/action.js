@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { Schema, ObjectId } = mongoose
 
 module.exports = new Schema({
-    move: {
+    type: {
         type: [String],
         enum: ['call', 'bet', 'raise', 'check', 'fold', 'leave'],
         required: true
