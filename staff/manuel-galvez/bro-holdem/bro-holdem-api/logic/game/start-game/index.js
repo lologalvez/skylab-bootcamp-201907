@@ -47,8 +47,10 @@ module.exports = function (gameId) {
             newHand.used_cards.push(randomNum)
         }
 
-        // Deal players' cards
+        // Players setup and dealing
         game.players.forEach(player => {
+
+            // Card dealing
             for (i = 0; i < 2; i++) {
                 do {
                     randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
@@ -57,7 +59,14 @@ module.exports = function (gameId) {
                 player.cards.push(randomNum)
                 newHand.used_cards.push(randomNum)
             }
+
+            // Status
             player.in_hand = true
+
+            // Blinds
+            if (player.position === newHand.bb_pos) {
+
+            }
         })
 
         game.hands.push(newHand)

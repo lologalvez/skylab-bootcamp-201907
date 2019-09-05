@@ -17,8 +17,8 @@ describe('logic - host game', () => {
         name = `gameName-${Math.random()}`
         max_players = Number((Math.random() * (6 - 4) + 4).toFixed())
         initial_stack = Number(Math.random().toFixed())
-        initial_bb = Number(Math.random().toFixed())
-        initial_sb = Number(Math.random().toFixed())
+        initial_bb = Number((Math.random() * (50 - 25) + 25).toFixed())
+        initial_sb = Number((Math.random() * (50 - 25) + 25).toFixed())
         blinds_increase = Number(Math.random().toFixed())
         hostId = new mongoose.Types.ObjectId
         validHost = String(hostId)
@@ -46,7 +46,7 @@ describe('logic - host game', () => {
     it('should fail if game already exists', async () => {
 
         await Game.deleteMany()
-        const game = await Game.create({ name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, validHost })
+        const game = await Game.create({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase, validHost })
 
         try {
             await logic.hostGame(name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase, validHost)

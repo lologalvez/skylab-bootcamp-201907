@@ -31,8 +31,8 @@ describe('logic - start game', () => {
         name = `gameName-${Math.random()}`
         max_players = Number((Math.random() * (6 - 4) + 4).toFixed())
         initial_stack = Number(Math.random().toFixed())
-        initial_bb = Number(Math.random().toFixed())
-        initial_sb = Number(Math.random().toFixed())
+        initial_bb = Number((Math.random() * (50 - 25) + 25).toFixed())
+        initial_sb = Number((Math.random() * (50 - 25) + 25).toFixed())
         blinds_increase = Number(Math.random().toFixed())
 
 
@@ -47,7 +47,7 @@ describe('logic - start game', () => {
             joinerId = joiner.id
 
             // Replicate host game (create new game and add host as a player)
-            const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase })
+            const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase })
             gameId = newGame.id
             newGame.host = hostId
 

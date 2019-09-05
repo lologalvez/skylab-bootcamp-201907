@@ -30,7 +30,7 @@ module.exports = function (name, max_players, initial_stack, initial_bb, initial
         if (game) throw Error('Game already exists.')
 
         // Create game
-        const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, blinds_increase })
+        const newGame = new Game({ name, max_players, initial_stack, initial_bb, initial_sb, current_bb: initial_bb, current_sb: initial_sb, blinds_increase })
         const gameId = newGame.id
         newGame.host = hostId
 

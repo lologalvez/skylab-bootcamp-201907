@@ -35,6 +35,16 @@ module.exports = new Schema({
         default: false
     },
 
+    current_bb: {
+        type: Number,
+        default: 0
+    },
+
+    current_sb: {
+        type: Number,
+        default: 0
+    },
+
     status: {
         type: String,
         required: true,
