@@ -3,7 +3,7 @@ const { Schema, ObjectId } = mongoose
 
 module.exports = new Schema({
     type: {
-        type: [String],
+        type: String,
         enum: ['call', 'bet', 'raise', 'check', 'fold', 'leave'],
         required: true
     },
@@ -28,6 +28,13 @@ module.exports = new Schema({
         required: true
     },
 
+    handPot: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
+    user: { type: ObjectId, ref: 'User' },
     player: { type: ObjectId, ref: 'Player' },
     game: { type: ObjectId, ref: 'Game' },
     hand: { type: ObjectId, ref: 'Hand' }

@@ -63,9 +63,21 @@ module.exports = function (gameId) {
             // Status
             player.inHand = true
 
-            // Blinds
-            if (player.position === newHand.bbPos) player.betAmount = game.currentBB
-            if (player.position === newHand.sbPos) player.betAmount = game.currentSB
+            // Blinds assignment
+            let isBlind, blindAmount, stackLeft
+            if (player.position === newHand.bbPos) { isBlind = true; blindAmount = game.currentBB }
+            if (player.position === newHand.sbPos) { isBlind = true; blindAmount = game.currentSB }
+            if (isBlind) {
+                stackLeft = player.currentStack - blindAmount
+                if (stackLeft < 0) {
+                    player.betAmount = player.currentStack
+                    player.currentStack = 0
+                } else if (stackLeft > 0) {
+                    player.betAmount = blindAmount
+                    player.currentStack = stackLeft
+                }
+                isBlind = false
+            }
 
         })
 
