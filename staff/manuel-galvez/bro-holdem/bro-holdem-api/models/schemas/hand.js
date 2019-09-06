@@ -27,6 +27,11 @@ module.exports = new Schema({
         required: true
     },
 
+    endPos: {
+        type: Number,
+        default: 1
+    },
+
     round: {
         type: Number,
         required: true
