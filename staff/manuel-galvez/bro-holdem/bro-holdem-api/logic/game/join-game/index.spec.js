@@ -66,8 +66,11 @@ describe('logic - join game', () => {
 
     it('should succeed on correct data', async () => {
         const result = await logic.joinGame(gameId, joinerId)
-        expect(result).not.to.exist
+        expect(result).to.exist
         const game = await Game.findById(gameId)
+        const user = await User.findById(joinerId)
+        expect(result.userName).to.equal(user.username)
+        expect(result.gameName).to.equal(game.name)
         expect(game).to.exist
         expect(game.players.length).to.equal(2)
         expect(String(game.players[0].user)).to.equal(hostId)

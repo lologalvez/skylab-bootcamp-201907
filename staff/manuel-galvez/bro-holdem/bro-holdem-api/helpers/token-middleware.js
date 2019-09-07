@@ -5,7 +5,6 @@ const { env: { JWT_SECRET } } = process
 module.exports = (req, res, next) => {
     try {
 
-        debugger
         const { headers: { authorization } } = req
 
         if (!authorization) throw new Error('No authorization token received')

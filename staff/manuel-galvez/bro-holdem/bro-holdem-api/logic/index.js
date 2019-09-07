@@ -4,9 +4,11 @@ module.exports = {
     hostGame: require('./game/host-game'),
     joinGame: require('./game/join-game'),
     startGame: require('./game/start-game'),
+    retrieveGame: require('./game/retrieve-game'),
     call: require('./action/call'),
     check: require('./action/check'),
     fold: require('./action/fold'),
     raise: require('./action/raise')
+
 
 }

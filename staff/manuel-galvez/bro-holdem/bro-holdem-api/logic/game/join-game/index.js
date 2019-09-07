@@ -44,5 +44,6 @@ module.exports = function (gameId, userId) {
         game.players.push(newPlayer)
 
         await game.save()
+        return { userName: user.username, gameName: game.name }
     })()
 }

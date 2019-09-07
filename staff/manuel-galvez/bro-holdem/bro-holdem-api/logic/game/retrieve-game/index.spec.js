@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const logic = require('../../../logic')
 const { Game, User, Player } = require('../../../models')
 
-describe('logic - start game', () => {
+describe('logic - retrieve game', () => {
 
     before(() => {
         mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })
@@ -12,7 +12,6 @@ describe('logic - start game', () => {
 
     let username, email, password, oneId
     let username2, email2, password2, twoId
-    let username3, email3, password3, threeId
     let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease
     let gameId
 
@@ -28,10 +27,6 @@ describe('logic - start game', () => {
         email2 = `email-${Math.random()}@email.com`
         password2 = `password-${Math.random()}`
 
-        // User 3
-        username3 = `username-${Math.random()}`
-        email3 = `email-${Math.random()}@email.com`
-        password3 = `password-${Math.random()}`
 
         // Game
         name = `gameName-${Math.random()}`
@@ -40,7 +35,6 @@ describe('logic - start game', () => {
         initialBB = Number((Math.random() * (50 - 25) + 25).toFixed())
         initialSB = Number((Math.random() * (50 - 25) + 25).toFixed())
         blindsIncrease = Number(Math.random().toFixed())
-
 
         return (async () => {
 
@@ -51,8 +45,6 @@ describe('logic - start game', () => {
             oneId = userOne.id
             const userTwo = new User({ username: username2, email: email2, password: password2 })
             twoId = userTwo.id
-            const userThree = new User({ username: username3, email: email3, password: password3 })
-            twoId = userThree.id
 
             // Replicate host game (create new game and add host as a player)
             const newGame = new Game({ name, maxPlayers, initialStack, initialBB, initialSB, currentBB: initialBB, currentSB: initialSB, blindsIncrease })
@@ -81,45 +73,32 @@ describe('logic - start game', () => {
             newPlayer2.user = twoId
             newGame.players.push(newPlayer2)
 
-            // Create new instance for player3
-            const newPlayer3 = new Player({
-                position: newGame.players.length,
-                currentStack: initialStack,
-                cards: [],
-                inHand: false,
-                betAmount: 0
-            })
-            newPlayer3.user = threeId
-            newGame.players.push(newPlayer3)
-
-            return Promise.all([userOne.save(), userTwo.save(), userThree.save(), newGame.save()])
+            return Promise.all([userOne.save(), userTwo.save(), newGame.save()])
         })()
     })
 
     it('should succeed on correct data', async () => {
-        const result = await logic.startGame(gameId)
+        const result = await logic.retrieveGame(gameId)
         expect(result).to.exist
         const retrievedGame = await Game.findById(gameId)
-        expect(result).to.equal(retrievedGame.name)
-        expect(retrievedGame.status).to.equal('playing')
-        expect(retrievedGame.hands.length).to.equal(1)
-        expect(retrievedGame.hands[0].pot).to.equal(0)
-        expect(retrievedGame.hands[0].dealerPos).to.equal(0)
-        expect(retrievedGame.hands[0].bbPos).to.equal(2)
-        expect(retrievedGame.hands[0].sbPos).to.equal(1)
-        expect(retrievedGame.hands[0].turnPos).to.equal(1)
-        expect(retrievedGame.hands[0].usedCards.length).to.equal(9)
-        expect(retrievedGame.hands[0].tableCards.length).to.equal(3)
-        expect(retrievedGame.players[0].inHand).to.equal(true)
-        expect(retrievedGame.players[1].inHand).to.equal(true)
-        expect(retrievedGame.players[0].cards.length).to.equal(2)
-        expect(retrievedGame.players[1].cards.length).to.equal(2)
+        expect(result.name).to.equal(retrievedGame.name)
+        expect(result.maxPlayers).to.equal(retrievedGame.maxPlayers)
+        expect(result.initialStack).to.equal(retrievedGame.initialStack)
+        expect(result.initialBB).to.equal(retrievedGame.initialBB)
+        expect(result.initialSB).to.equal(retrievedGame.initialSB)
+        expect(result.blindsIncrease).to.equal(retrievedGame.blindsIncrease)
+        expect(result.currentBB).to.equal(retrievedGame.currentBB)
+        expect(result.currentSB).to.equal(retrievedGame.currentSB)
+        expect(result.status).to.equal(retrievedGame.status)
+        expect(result.host).to.deep.equal(retrievedGame.host)
+        expect(result.players[0].id).to.deep.equal(retrievedGame.players[0].id)
+        expect(result.players[1].id).to.deep.equal(retrievedGame.players[1].id)
+        expect(result.hands.length).to.equal(retrievedGame.hands.length)
     })
 
     it('should fail if game does not exist', async () => {
 
         await Game.deleteMany()
-
         try {
             await logic.startGame(gameId)
         } catch (error) {

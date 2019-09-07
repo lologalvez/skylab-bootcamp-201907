@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validate = require('../../../utils/validate')
+const cardDealing = require('../../../utils/card-dealing')
 const { Game, Player, Card, Hand } = require('../../../models')
 
 /**
@@ -36,29 +37,13 @@ module.exports = function (gameId) {
         })
 
         // Deal flop cards
-        let randomNum
-        let match
-        for (i = 0; i < 3; i++) {
-            do {
-                randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
-                match = newHand.usedCards.includes(randomNum)
-            } while (match)
-            newHand.tableCards.push(randomNum)
-            newHand.usedCards.push(randomNum)
-        }
+        await cardDealing(newHand.tableCards, 3, newHand.usedCards)
 
         // Players setup and dealing
-        game.players.forEach(player => {
+        for (const player of game.players) {
 
-            // Card dealing
-            for (i = 0; i < 2; i++) {
-                do {
-                    randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
-                    match = newHand.usedCards.includes(randomNum)
-                } while (match)
-                player.cards.push(randomNum)
-                newHand.usedCards.push(randomNum)
-            }
+            // Card Dealing
+            await cardDealing(player.cards, 2, newHand.usedCards)
 
             // Status
             player.inHand = true
@@ -78,12 +63,10 @@ module.exports = function (gameId) {
                 }
                 isBlind = false
             }
-
-        })
+        }
 
         game.hands.push(newHand)
-
         await game.save()
-
+        return game.name
     })()
 }
