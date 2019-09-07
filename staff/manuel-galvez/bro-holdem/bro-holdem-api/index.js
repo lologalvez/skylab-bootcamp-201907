@@ -18,6 +18,7 @@ mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
             next()
         })
 
+        app.use(express.static('public'))
         app.use('/api', routes)
 
         app.listen(PORT, () => console.log(`${name} ${version} up and running on port ${PORT}`))
