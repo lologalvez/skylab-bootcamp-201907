@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
-const validate = require('../../../utils/validate')
-const { Game, Player } = require('../../../models')
+const { validate } = require('bro-holdem-utils')
+const { models: { Game, Player } } = require('bro-holdem-data')
 
 /**
 * 

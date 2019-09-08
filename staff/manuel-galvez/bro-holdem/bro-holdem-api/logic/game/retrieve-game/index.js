@@ -1,5 +1,5 @@
-const validate = require('../../../utils/validate')
-const { Game } = require('../../../models')
+const { validate } = require('bro-holdem-utils')
+const { models: { Game } } = require('bro-holdem-data')
 
 /**
 * 

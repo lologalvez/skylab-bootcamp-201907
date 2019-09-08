@@ -1,7 +1,6 @@
-const mongoose = require('mongoose')
-const validate = require('../../../utils/validate')
-const gameCheck = require('../../../utils/game-check')
-const { Game, Action } = require('../../../models')
+const { validate } = require('bro-holdem-utils')
+const { gameCheck } = require('bro-holdem-utils')
+const { models: { Action } } = require('bro-holdem-data')
 
 /**
 * 
@@ -57,21 +56,5 @@ module.exports = function (gameId, userId, raiseTo) {
 
         await Promise.all([game.save(), action.save()])
 
-        // End of round check (utils)
-        const lastBet = player.betAmount
-        if (player.position === currentHand.endPos) {
-            const endOfRound = game.players.every(player => player.inHand && player.betAmount === lastBet)
-            if (endOfRound) {
-                console.log('End of round')
-                /* 
-                - Update hand.round
-                - Set all players betAmount to 0
-                - Deal new card to hand.tableCards (and usedCards)
-                - Reset turnPos to first after dealer that is in_hand 
-                - Check if hand is over
-                - Check if blinds must be be increased (optional)
-                */
-            }
-        }
     })()
 }

@@ -1,5 +1,6 @@
-const validate = require('../../../utils/validate')
-const { User } = require('../../../models')
+const { validate } = require('bro-holdem-utils')
+const { models: { User } } = require('bro-holdem-data')
+const bcrypt = require('bcryptjs')
 
 /**
  * 
@@ -20,8 +21,12 @@ module.exports = function (username, email, password) {
     return (async () => {
         const user = await User.findOne({ email })
         if (user) throw Error(`User with e-mail ${email} already exists.`)
+
         const uname = await User.findOne({ username })
         if (uname) throw Error('Username is already taken.')
-        await User.create({ username, email, password })
+
+        const hash = await bcrypt.hash(password, 10)
+
+        await User.create({ username, email, password: hash })
     })()
 }

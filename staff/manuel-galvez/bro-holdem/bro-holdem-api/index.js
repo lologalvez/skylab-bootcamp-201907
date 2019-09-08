@@ -1,13 +1,12 @@
 require('dotenv').config()
-const mongoose = require('mongoose')
+const { database } = require('bro-holdem-data')
 const express = require('express')
 const { name, version } = require('./package')
 const routes = require('./routes')
 
-const { env: { PORT, DB_URL } } = process
+const { env: { DB_URL, PORT } } = process
 
-
-mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+database.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
 
         const app = express()
@@ -27,7 +26,7 @@ mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 process.on('SIGINT', () => {
     console.log(`\n${name} ${version} shutting down, disconnecting from db...`)
 
-    mongoose.disconnect()
+    database.disconnect()
 
     process.exit(0)
 })

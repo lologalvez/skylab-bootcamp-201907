@@ -1,11 +1,17 @@
-const mongoose = require('mongoose')
-const logic = require('../../.')
+require('dotenv').config()
+const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
-const { Game, Player, User } = require('../../../models')
+const logic = require('../../../logic')
+const { models: { Game, User, Player } } = require('bro-holdem-data')
+
+const { env: { DB_URL_TEST } } = process
 
 describe('logic - join game', () => {
 
-    before(() => mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true }))
+    before(() => {
+        database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
+    })
+
 
     let username, email, password, hostId
     let username2, email2, password2, joinerId
@@ -135,5 +141,5 @@ describe('logic - join game', () => {
         ).to.throw(`User ID with value undefined is not a valid ObjectId`)
     )
 
-    after(() => mongoose.disconnect())
+    after(() => database.disconnect())
 })

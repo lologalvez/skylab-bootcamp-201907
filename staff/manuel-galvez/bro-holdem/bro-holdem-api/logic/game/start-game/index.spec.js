@@ -1,12 +1,15 @@
-const mongoose = require('mongoose')
+require('dotenv').config()
+const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
 const logic = require('../../../logic')
-const { Game, User, Player } = require('../../../models')
+const { models: { Game, User, Player } } = require('bro-holdem-data')
+
+const { env: { DB_URL_TEST } } = process
 
 describe('logic - start game', () => {
 
     before(() => {
-        mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })
+        database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
     })
 
 
@@ -147,5 +150,5 @@ describe('logic - start game', () => {
         ).to.throw(Error, `Game ID with value aaaa is not a valid ObjectId`)
     })
 
-    after(() => mongoose.disconnect())
+    after(() => database.disconnect())
 })

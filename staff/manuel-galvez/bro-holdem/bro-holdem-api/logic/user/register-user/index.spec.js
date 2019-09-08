@@ -1,11 +1,17 @@
-const mongoose = require('mongoose')
-const logic = require('../../../logic')
+require('dotenv').config()
+const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
-const { User } = require('../../../models')
+const logic = require('../../../logic')
+const { models: { User } } = require('bro-holdem-data')
+const bcrypt = require('bcryptjs')
+
+const { env: { DB_URL_TEST } } = process
 
 describe('logic - register user', () => {
 
-    before(() => mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true }))
+    before(() => {
+        database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
+    })
 
     let name, surname, email, password
 
@@ -19,11 +25,12 @@ describe('logic - register user', () => {
     it('should succeed on correct data', async () => {
         const result = await logic.registerUser(username, email, password)
         expect(result).not.to.exist
-        const user = await User.findOne({ email, password })
+        const user = await User.findOne({ email })
         expect(user).to.exist
         expect(user.username).to.equal(username)
         expect(user.email).to.equal(email)
-        expect(user.password).to.equal(password)
+        const match = await bcrypt.compare(password, user.password)
+        expect(match).to.be.true
     })
 
     it('should fail if the user already exists', async () => {
@@ -114,5 +121,5 @@ describe('logic - register user', () => {
         ).to.throw(`password with value 123 is not a string`)
     )
 
-    after(() => mongoose.disconnect())
+    after(() => database.disconnect())
 })

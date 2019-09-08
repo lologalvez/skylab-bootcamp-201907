@@ -1,8 +1,6 @@
-const mongoose = require('mongoose')
-const validate = require('../../../utils/validate')
-const gameCheck = require('../../../utils/game-check')
-const { Game, Action } = require('../../../models')
-
+const { validate } = require('bro-holdem-utils')
+const { gameCheck } = require('bro-holdem-utils')
+const { models: { Action } } = require('bro-holdem-data')
 /**
 * 
 * @param {*} gameId 

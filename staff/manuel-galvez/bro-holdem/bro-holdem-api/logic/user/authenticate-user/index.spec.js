@@ -1,12 +1,16 @@
-const mongoose = require('mongoose')
+require('dotenv').config()
+const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
 const logic = require('../../../logic')
-const { User } = require('../../../models')
+const { models: { User } } = require('bro-holdem-data')
+const bcrypt = require('bcryptjs')
+
+const { env: { DB_URL_TEST } } = process
 
 describe('logic - authenticate user', () => {
 
     before(() => {
-        mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })
+        database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
     })
 
     let username, email, password, id
@@ -17,9 +21,10 @@ describe('logic - authenticate user', () => {
         email = `email-${Math.random()}@mail.com`
         password = `name-${Math.random()}`
 
+
         return (async () => {
             await User.deleteMany()
-            const user = await User.create({ username, email, password })
+            const user = await User.create({ username, email, password: await bcrypt.hash(password, 10) })
             id = user.id
         })()
     })
@@ -71,5 +76,5 @@ describe('logic - authenticate user', () => {
         ).to.throw(Error, 'password with value undefined is not a string')
     })
 
-    after(() => mongoose.disconnect())
+    after(() => database.disconnect())
 })

@@ -1,12 +1,15 @@
-const mongoose = require('mongoose')
+require('dotenv').config()
+const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
 const logic = require('../../../logic')
-const { Game, User, Player, Hand, Action } = require('../../../models')
+const { models: { Game, User, Player, Hand, Action } } = require('bro-holdem-data')
+
+const { env: { DB_URL_TEST } } = process
 
 describe.skip('utils - update turn', () => {
 
     before(() => {
-        mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })
+        database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
     })
 
     let username, email, password, oneId
@@ -246,5 +249,5 @@ describe.skip('utils - update turn', () => {
             logic.updateTurn(gameId, twoId, 'aaaa')
         ).to.throw(Error, `Raise with value aaaa is not a number`)
     })
-    after(() => mongoose.disconnect())
+    after(() => database.disconnect())
 })

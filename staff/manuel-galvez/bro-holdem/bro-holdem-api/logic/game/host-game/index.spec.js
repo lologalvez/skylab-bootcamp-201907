@@ -1,18 +1,26 @@
-const mongoose = require('mongoose')
+require('dotenv').config()
+const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
 const logic = require('../../../logic')
-const { Game } = require('../../../models')
+const { models: { Game, User } } = require('bro-holdem-data')
+
+const { env: { DB_URL_TEST } } = process
 
 describe('logic - host game', () => {
 
     before(() => {
-        mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })
+        database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
     })
 
     let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, status
+    let username, email, password, userOne, oneId
     let hostId, validHost
 
     beforeEach(() => {
+        // User 1
+        username = `username-${Math.random()}`
+        email = `email-${Math.random()}@email.com`
+        password = `password-${Math.random()}`
 
         name = `gameName-${Math.random()}`
         maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
@@ -20,8 +28,19 @@ describe('logic - host game', () => {
         initialBB = Number((Math.random() * (50 - 25) + 25).toFixed())
         initialSB = Number((Math.random() * (50 - 25) + 25).toFixed())
         blindsIncrease = Number(Math.random().toFixed())
-        hostId = new mongoose.Types.ObjectId
-        validHost = String(hostId)
+
+        return (async () => {
+
+            // Register users
+            await User.deleteMany()
+            await Game.deleteMany()
+            const userOne = new User({ username, email, password })
+            hostId = userOne.id
+            validHost = String(hostId)
+
+            await userOne.save()
+
+        })()
     })
 
     it('should succeed on correct data', async () => {
@@ -177,5 +196,5 @@ describe('logic - host game', () => {
         ).to.throw(Error, `host ID with value undefined is not a valid ObjectId`)
     })
 
-    after(() => mongoose.disconnect())
+    after(() => database.disconnect())
 })
