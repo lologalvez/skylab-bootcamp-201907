@@ -14,6 +14,7 @@ module.exports = function (gameId) {
 
     return (async () => {
 
+        // Find game
         const game = await Game.findById(gameId)
         if (!game) throw Error('Game does not exist.')
 
@@ -21,17 +22,17 @@ module.exports = function (gameId) {
         const currentHand = game.hands[game.hands.length - 1]
         if (!currentHand) throw Error('There are no hands dealt yet.')
 
-        if (hand.turnPos === hand.endPos) {
+        if (currentHand.turnPos === currentHand.endPos) {
             //return checkRound(game)
         }
 
         let counter, nextTurn
         do {
-            hand.turnPos === game.players.length ? counter = 0 : counter = hand.position + 1
+            (currentHand.turnPos === game.players.length - 1) ? counter = 0 : counter = currentHand.turnPos + 1
             if (game.players[counter].inHand) nextTurn = counter
-        } while (!nextTurn)
+        } while (nextTurn != 0 && !nextTurn)
 
-        hand.turnPos = counter
+        currentHand.turnPos = counter
         await game.save()
 
     })()

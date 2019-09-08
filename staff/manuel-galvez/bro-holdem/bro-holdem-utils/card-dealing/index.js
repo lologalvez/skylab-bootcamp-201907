@@ -1,4 +1,4 @@
-const { Card } = require('../../models')
+const { models: { Card } } = require('bro-holdem-data')
 
 async function cardDealing(destArray, numberOfCards, usedCards) {
 

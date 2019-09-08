@@ -6,7 +6,7 @@ const { models: { Game, User, Player, Hand, Action } } = require('bro-holdem-dat
 
 const { env: { DB_URL_TEST } } = process
 
-describe.skip('utils - update turn', () => {
+describe('utils - update turn', () => {
 
     before(() => {
         database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -14,7 +14,6 @@ describe.skip('utils - update turn', () => {
 
     let username, email, password, oneId
     let username2, email2, password2, twoId
-    let username3, email3, password3, threeId
     let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease
     let gameId
 
@@ -32,12 +31,6 @@ describe.skip('utils - update turn', () => {
         email2 = `email-${Math.random()}@email.com`
         password2 = `password-${Math.random()}`
 
-        // User 3
-        username3 = `username-${Math.random()}`
-        email3 = `email-${Math.random()}@email.com`
-        password3 = `password-${Math.random()}`
-
-        // Game
         name = `gameName-${Math.random()}`
         maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
         initialStack = Number((Math.random() * (1500 - 1000) + 1000).toFixed())
@@ -55,8 +48,6 @@ describe.skip('utils - update turn', () => {
             oneId = userOne.id
             const userTwo = new User({ username: username2, email: email2, password: password2 })
             twoId = userTwo.id
-            const userThree = new User({ username: username3, email: email3, password: password3 })
-            threeId = userThree.id
 
             // Replicate host game (create new game and add host as a player)
             const newGame = new Game({ name, maxPlayers, initialStack, initialBB, initialSB, currentBB: initialBB, currentSB: initialSB, blindsIncrease })
@@ -84,17 +75,6 @@ describe.skip('utils - update turn', () => {
             })
             newPlayer2.user = twoId
             newGame.players.push(newPlayer2)
-
-            // Create new instance for player3
-            const newPlayer3 = new Player({
-                position: newGame.players.length,
-                currentStack: initialStack,
-                cards: [],
-                inHand: false,
-                betAmount: 0
-            })
-            newPlayer3.user = threeId
-            newGame.players.push(newPlayer3)
 
             // Deal first hand
             const newHand = new Hand({
@@ -152,43 +132,26 @@ describe.skip('utils - update turn', () => {
                     isBlind = false
                 }
                 newHand.pot = newGame.currentBB + newGame.currentSB
-
             })
 
             newGame.hands.push(newHand)
 
-            await Promise.all([userOne.save(), userTwo.save(), userThree.save(), newGame.save()])
+            await Promise.all([userOne.save(), userTwo.save(), newGame.save()])
         })()
     })
 
     it('should succeed on correct data', async () => {
-        const result = await logic.updateTurn(game)
+        const result = await logic.updateTurn(gameId)
         expect(result).not.to.exist
-
+        const game = await Game.findById(gameId)
         const retrievedGame = await Game.findById(gameId)
-        const callPlayer = retrievedGame.players.find(player => String(player.user) === twoId)
-        const expectedPot = retrievedGame.players.reduce((acc, player) => acc + player.betAmount, 0)
-        const highestBet = Math.max.apply(Math, retrievedGame.players.map(key => key.betAmount))
-        const lastAction = await Action.find().sort({ _id: -1 }).limit(1)
-        expect(retrievedGame.status).to.equal('playing')
-        expect(retrievedGame.hands[0].pot).to.equal(expectedPot)
-        expect(callPlayer.betAmount).to.equal(highestBet)
-        expect(callPlayer.currentStack).to.equal(retrievedGame.initialStack - highestBet)
-        expect(lastAction).to.exist
-        expect(lastAction[0].type).to.equal('raise')
-        expect(lastAction[0].user).to.deep.equal(callPlayer.user)
-        expect(lastAction[0].player).to.deep.equal(callPlayer._id)
-        expect(lastAction[0].hand).to.deep.equal(retrievedGame.hands[retrievedGame.hands.length - 1]._id)
-        expect(lastAction[0].game).to.deep.equal(retrievedGame._id)
-
+        expect(retrievedGame.hands[0].turnPos).to.equal(0)
     })
 
     it('should fail if game does not exist', async () => {
-
         await Game.deleteMany()
-
         try {
-            await logic.updateTurn(gameId, twoId, raiseTo)
+            await logic.updateTurn(gameId)
         } catch (error) {
             expect(error).to.exist
             expect(error.message).to.equal('Game does not exist.')
@@ -196,58 +159,48 @@ describe.skip('utils - update turn', () => {
     })
 
 
+    it('should fail if there is only one player left', async () => {
+        const retrievedGame = await Game.findById(gameId)
+        retrievedGame.players.pop()
+        await retrievedGame.save()
+        try {
+            await logic.updateTurn(gameId)
+        } catch (error) {
+            expect(error).to.exist
+            expect(error.message).to.equal('The game is over.')
+        }
+    })
+
+
+    it('should fail if there are no hands to play', async () => {
+        const retrievedGame = await Game.findById(gameId)
+        retrievedGame.hands.pop()
+        await retrievedGame.save()
+        try {
+            await logic.updateTurn(gameId)
+        } catch (error) {
+            expect(error).to.exist
+            expect(error.message).to.equal('There are no hands dealt yet.')
+        }
+    })
+
     it('should fail on empty Game ID', () => {
         expect(() =>
-            logic.updateTurn('', twoId, raiseTo)
+            logic.updateTurn('')
         ).to.throw(Error, 'Game ID is empty or blank')
     })
 
     it('should fail on undefined Game ID', () => {
         expect(() =>
-            logic.updateTurn(undefined, twoId, raiseTo)
+            logic.updateTurn(undefined)
         ).to.throw(Error, `Game ID with value undefined is not a valid ObjectId`)
     })
 
     it('should fail on non-valid data type for Game ID', () => {
         expect(() =>
-            logic.updateTurn('aaaa', twoId, raiseTo)
+            logic.updateTurn('aaaa')
         ).to.throw(Error, `Game ID with value aaaa is not a valid ObjectId`)
     })
 
-    it('should fail on empty User ID', () => {
-        expect(() =>
-            logic.updateTurn(gameId, '', raiseTo)
-        ).to.throw(Error, 'User ID is empty or blank')
-    })
-
-    it('should fail on undefined User ID', () => {
-        expect(() =>
-            logic.updateTurn(gameId, undefined, raiseTo)
-        ).to.throw(Error, `User ID with value undefined is not a valid ObjectId`)
-    })
-
-    it('should fail on non-valid data type for Game ID', () => {
-        expect(() =>
-            logic.updateTurn(gameId, 'aaaa', raiseTo)
-        ).to.throw(Error, `User ID with value aaaa is not a valid ObjectId`)
-    })
-
-    it('should fail on empty raise', () => {
-        expect(() =>
-            logic.updateTurn(gameId, twoId, '')
-        ).to.throw(Error, 'Raise is empty or blank')
-    })
-
-    it('should fail on undefined raise', () => {
-        expect(() =>
-            logic.updateTurn(gameId, twoId, undefined)
-        ).to.throw(Error, `Raise with value undefined is not a number`)
-    })
-
-    it('should fail on non-valid data type for raise', () => {
-        expect(() =>
-            logic.updateTurn(gameId, twoId, 'aaaa')
-        ).to.throw(Error, `Raise with value aaaa is not a number`)
-    })
     after(() => database.disconnect())
 })

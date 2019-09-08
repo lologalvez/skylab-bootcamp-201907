@@ -1,4 +1,4 @@
-const { Game } = require('../../models/')
+const { models: { Game } } = require('bro-holdem-data')
 
 async function gameCheck(gameId, userId) {
 

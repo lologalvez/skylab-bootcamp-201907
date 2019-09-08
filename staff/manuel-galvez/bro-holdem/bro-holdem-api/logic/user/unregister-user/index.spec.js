@@ -31,7 +31,6 @@ describe('logic - unregister user', () => {
     })
 
 
-
     it('should fail on unexisting user', async () => {
         email = "fake@fake.com"
         try {
