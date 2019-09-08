@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const logic = require('../../../logic')
 const { Game, User, Player } = require('../../../models')
 
-describe.only('logic - leave game', () => {
+describe('logic - leave game', () => {
 
     before(() => {
         mongoose.connect('mongodb://localhost/bro-holdem-test', { useNewUrlParser: true })

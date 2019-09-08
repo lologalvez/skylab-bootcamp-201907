@@ -9,7 +9,6 @@ module.exports = {
     call: require('./action/call'),
     check: require('./action/check'),
     fold: require('./action/fold'),
-    raise: require('./action/raise')
-
-
+    raise: require('./action/raise'),
+    updateTurn: require('./round/update-turn')
 }

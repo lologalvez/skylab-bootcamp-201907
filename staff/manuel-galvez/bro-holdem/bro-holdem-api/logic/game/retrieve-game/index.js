@@ -1,7 +1,5 @@
-const mongoose = require('mongoose')
 const validate = require('../../../utils/validate')
-const cardDealing = require('../../../utils/card-dealing')
-const { Game, Player, Card, Hand } = require('../../../models')
+const { Game } = require('../../../models')
 
 /**
 * 
@@ -17,11 +15,17 @@ module.exports = function (gameId) {
     return (async () => {
 
         // Find game
-        const game = Game.findOne({ _id: gameId }, { _id: 0, password: 0 }).lean()
+        const game = await Game.findOne({ _id: gameId }, { _id: 0, __v: 0 }).lean()
         if (!game) throw Error('Game does not exist.')
         game.id = gameId
-
+        game.players.forEach(player => {
+            player.id = String(player._id)
+            delete player._id
+        })
+        game.hands.forEach(hand => {
+            hand.id = String(hand._id)
+            delete hand._id
+        })
         return game
-
     })()
 }
