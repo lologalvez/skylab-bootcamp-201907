@@ -5,6 +5,7 @@ module.exports = {
     joinGame: require('./game/join-game'),
     startGame: require('./game/start-game'),
     retrieveGame: require('./game/retrieve-game'),
+    leaveGame: require('./game/leave-game'),
     call: require('./action/call'),
     check: require('./action/check'),
     fold: require('./action/fold'),
