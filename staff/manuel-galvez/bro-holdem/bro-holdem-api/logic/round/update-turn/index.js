@@ -23,7 +23,7 @@ module.exports = function (gameId) {
         if (!currentHand) throw Error('There are no hands dealt yet.')
 
         if (currentHand.turnPos === currentHand.endPos) {
-            //return checkRound(game)
+            //return endRound(game)
         }
 
         let counter, nextTurn

@@ -13,5 +13,6 @@ module.exports = {
     check: require('./action/check'),
     fold: require('./action/fold'),
     raise: require('./action/raise'),
-    updateTurn: require('./round/update-turn')
+    updateTurn: require('./round/update-turn'),
+    endRound: require('./round/end-round')
 }
