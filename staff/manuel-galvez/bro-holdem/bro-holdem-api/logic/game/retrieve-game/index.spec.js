@@ -103,7 +103,7 @@ describe('logic - retrieve game', () => {
 
         await Game.deleteMany()
         try {
-            await logic.startGame(gameId)
+            await logic.dealHand(gameId)
         } catch (error) {
             expect(error).to.exist
             expect(error.message).to.equal('Game does not exist.')
@@ -113,19 +113,19 @@ describe('logic - retrieve game', () => {
 
     it('should fail on empty Game ID', () => {
         expect(() =>
-            logic.startGame('')
+            logic.dealHand('')
         ).to.throw(Error, 'Game ID is empty or blank')
     })
 
     it('should fail on undefined Game ID', () => {
         expect(() =>
-            logic.startGame(undefined)
+            logic.dealHand(undefined)
         ).to.throw(Error, `Game ID with value undefined is not a valid ObjectId`)
     })
 
     it('should fail on non-valid data type for Game ID', () => {
         expect(() =>
-            logic.startGame('aaaa')
+            logic.dealHand('aaaa')
         ).to.throw(Error, `Game ID with value aaaa is not a valid ObjectId`)
     })
 

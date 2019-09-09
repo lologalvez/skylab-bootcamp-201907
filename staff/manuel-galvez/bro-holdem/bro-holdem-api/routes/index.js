@@ -3,7 +3,7 @@ const tokenMiddleware = require('../helpers/token-middleware')
 const bodyParser = require('body-parser')
 
 const { registerUser, authenticateUser } = require('./user')
-const { hostGame, joinGame, startGame, retrieveGame, leaveGame } = require('./game')
+const { hostGame, joinGame, dealHand, retrieveGame, leaveGame } = require('./game')
 const { call, check, fold, raise } = require('./action')
 
 const router = Router()
@@ -16,7 +16,7 @@ router.post('/auth', jsonBodyParser, authenticateUser)
 
 /* GAME */
 router.post('/games', [tokenMiddleware, jsonBodyParser], hostGame)
-router.post('/games/:gameId', [tokenMiddleware, jsonBodyParser], startGame)
+router.post('/games/:gameId', [tokenMiddleware, jsonBodyParser], dealHand)
 router.get('/games/:gameId', [tokenMiddleware, jsonBodyParser], retrieveGame)
 router.post('/games/:gameId/player', [tokenMiddleware, jsonBodyParser], joinGame)
 router.delete('/games/:gameId/player', [tokenMiddleware, jsonBodyParser], leaveGame)

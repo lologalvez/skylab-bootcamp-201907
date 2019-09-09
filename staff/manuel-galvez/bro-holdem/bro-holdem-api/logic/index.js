@@ -6,7 +6,7 @@ module.exports = {
     updateUser: require('./user/update-user'),
     hostGame: require('./game/host-game'),
     joinGame: require('./game/join-game'),
-    startGame: require('./game/start-game'),
+    dealHand: require('./hand/deal-hand'),
     retrieveGame: require('./game/retrieve-game'),
     leaveGame: require('./game/leave-game'),
     call: require('./action/call'),
@@ -14,5 +14,6 @@ module.exports = {
     fold: require('./action/fold'),
     raise: require('./action/raise'),
     updateTurn: require('./round/update-turn'),
-    endRound: require('./round/end-round')
+    endRound: require('./round/end-round'),
+    resolveHand: require('./hand/resolve-hand')
 }

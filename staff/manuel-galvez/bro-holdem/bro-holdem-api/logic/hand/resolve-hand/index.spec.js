@@ -1,12 +1,12 @@
 require('dotenv').config()
 const { database } = require('bro-holdem-data')
 const { expect } = require('chai')
-const logic = require('../../../logic')
+const logic = require('../..')
 const { models: { Card, Game, User, Player, Hand } } = require('bro-holdem-data')
 
 const { env: { DB_URL_TEST } } = process
 
-describe('logic - end-round', () => {
+describe('logic - resolve hand', () => {
 
     before(() => {
         database.connect(DB_URL_TEST, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -39,7 +39,7 @@ describe('logic - end-round', () => {
         // Game
         name = `gameName-${Math.random()}`
         maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
-        initialStack = Number((Math.random() * (1500 - 1000) + 1000).toFixed())
+        initialStack = 1500
         initialBB = 50
         initialSB = 25
         blindsIncrease = Number(Math.random().toFixed())
@@ -107,30 +107,18 @@ describe('logic - end-round', () => {
 
             newGame.status = 'playing'
 
-            // Deal flop cards
-            let randomNum
-            let match
-            for (i = 0; i < 3; i++) {
-                do {
-                    randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
-                    match = newHand.usedCards.includes(randomNum)
-                } while (match)
-                newHand.tableCards.push(randomNum)
-                newHand.usedCards.push(randomNum)
-            }
+            // Assign hands manually for testing purposes
+            newHand.tableCards = [
+                await Card.findOne({ ref: 'Ts' }),
+                await Card.findOne({ ref: '6s' }),
+                await Card.findOne({ ref: '5h' }),
+                await Card.findOne({ ref: '2h' }),
+                await Card.findOne({ ref: '3d' })
+            ]
+
 
             // Players setup and dealing
-            newGame.players.forEach(player => {
-
-                // Card dealing
-                for (i = 0; i < 2; i++) {
-                    do {
-                        randomNum = Number((Math.random() * (52 - 1) + 1).toFixed())
-                        match = newHand.usedCards.includes(randomNum)
-                    } while (match)
-                    player.cards.push(randomNum)
-                    newHand.usedCards.push(randomNum)
-                }
+            for (const player of newGame.players) {
 
                 // Status
                 player.inHand = true
@@ -150,22 +138,32 @@ describe('logic - end-round', () => {
                     }
                     isBlind = false
                 }
-                newHand.pot = newGame.currentBB + newGame.currentSB
+            }
 
-            })
+            // Assign hands manually for testing purposes
+            newGame.players[0].cards = [await Card.findOne({ ref: 'As' }), await Card.findOne({ ref: 'Ad' })]
+            newGame.players[0].cards = [await Card.findOne({ ref: 'Ks' }), await Card.findOne({ ref: 'Kd' })]
+            newGame.players[0].cards = [await Card.findOne({ ref: 'Qs' }), await Card.findOne({ ref: 'Qd' })]
 
+            newHand.pot = newGame.currentBB + newGame.currentSB
 
-            // Emulate bet of player in position 1
-            newGame.players[0].betAmount = 50
-            newGame.players[0].currentStack -= 50
+            // Emulating river betting round
+            const game = await Game.findById(gameId)
+            // Player 1 bets 500
+            newGame.players[0].betAmount = 500
+            newGame.players[0].currentStack -= 500
+            newHand.pot += newGame.players[0].betAmount
 
-            // Emulate fold of player in position 2
+            // Player 2 folds
             newGame.players[1].inHand = false
 
-            // Emulate call of player in position 0 (dealer)
-            newHand.turnPos = 0
-            newHand.endPos = 0
-            newHand.pot += 50
+            // Player 3 calls 500
+            newGame.players[2].betAmount = 500
+            newGame.players[2].currentStack -= 500
+            newHand.pot += newGame.players[2].betAmount
+
+            newHand.round = 3
+            newHand.turnPos = newHand.endPos
 
             newGame.hands.push(newHand)
 
@@ -173,96 +171,13 @@ describe('logic - end-round', () => {
         })()
     })
 
-    it('should succeed on correct data - preflop to flop', async () => {
-        const result = await logic.endRound(gameId)
+    it('should succeed on correct data', async () => {
+        const result = await logic.resolveHand(gameId)
         expect(result).not.to.exist
         const retrievedGame = await Game.findById(gameId)
-        const currentHand = retrievedGame.hands[retrievedGame.hands.length - 1]
-        expect(currentHand.turnPos).to.equal(2)
-        expect(currentHand.endPos).to.equal(0)
-        expect(currentHand.round).to.equal(1)
-        expect(currentHand.tableCards.length).to.equal(3)
-        expect(currentHand.pot).to.equal(125)
-        expect(retrievedGame.players[0].inHand).to.equal(true)
-        expect(retrievedGame.players[1].inHand).to.equal(false)
-        expect(retrievedGame.players[2].inHand).to.equal(true)
-        expect(retrievedGame.players[0].betAmount).to.equal(0)
-        expect(retrievedGame.players[1].betAmount).to.equal(0)
-        expect(retrievedGame.players[2].betAmount).to.equal(0)
-    })
-
-    it('should succeed on correct data - flop to turn', async () => {
-        // Emulating flop betting round
-        const game = await Game.findById(gameId)
-        game.players[0].betAmount = 300
-        game.players[0].currentStack -= 300
-        game.players[2].betAmount = 300
-        game.players[2].currentStack -= 300
-        const flopHand = game.hands[game.hands.length - 1]
-        flopHand.round = 1
-        flopHand.pot = 725
-        flopHand.turnPos = flopHand.endPos
-        await game.save()
-
-        const result = await logic.endRound(gameId)
-        expect(result).not.to.exist
-        const retrievedGame = await Game.findById(gameId)
-        const currentHand = retrievedGame.hands[retrievedGame.hands.length - 1]
-        expect(currentHand.turnPos).to.equal(2)
-        expect(currentHand.endPos).to.equal(0)
-        expect(currentHand.round).to.equal(2)
-        expect(currentHand.tableCards.length).to.equal(4)
-        expect(currentHand.usedCards.length).to.equal(10)
-        expect(currentHand.pot).to.equal(725)
-        expect(retrievedGame.players[0].inHand).to.equal(true)
-        expect(retrievedGame.players[1].inHand).to.equal(false)
-        expect(retrievedGame.players[2].inHand).to.equal(true)
-        expect(retrievedGame.players[0].betAmount).to.equal(0)
-        expect(retrievedGame.players[1].betAmount).to.equal(0)
-        expect(retrievedGame.players[2].betAmount).to.equal(0)
-    })
-
-    it('should succeed on correct data - turn to river', async () => {
-        // Emulating turn betting round
-        const game = await Game.findById(gameId)
-        game.players[0].betAmount = 500
-        game.players[0].currentStack -= 500
-        game.players[2].betAmount = 500
-        game.players[2].currentStack -= 500
-        const turnHand = game.hands[game.hands.length - 1]
-        turnHand.round = 2
-        turnHand.pot = 1725
-        turnHand.turnPos = turnHand.endPos
-
-        // Emulate turn card dealing
-        let randomCard, match
-        for (i = 0; i < 1; i++) {
-            do {
-                randomCard = await Card.aggregate([{ $sample: { size: 1 } }])
-                match = turnHand.usedCards.includes(randomCard[0])
-            } while (match)
-            turnHand.tableCards.push(randomCard[0])
-            turnHand.usedCards.push(randomCard[0])
-            match = false
-        }
-        await game.save()
-
-        const result = await logic.endRound(gameId)
-        expect(result).not.to.exist
-        const retrievedGame = await Game.findById(gameId)
-        const currentHand = retrievedGame.hands[retrievedGame.hands.length - 1]
-        expect(currentHand.turnPos).to.equal(2)
-        expect(currentHand.endPos).to.equal(0)
-        expect(currentHand.round).to.equal(3)
-        expect(currentHand.tableCards.length).to.equal(5)
-        expect(currentHand.usedCards.length).to.equal(11)
-        expect(currentHand.pot).to.equal(1725)
-        expect(retrievedGame.players[0].inHand).to.equal(true)
-        expect(retrievedGame.players[1].inHand).to.equal(false)
-        expect(retrievedGame.players[2].inHand).to.equal(true)
-        expect(retrievedGame.players[0].betAmount).to.equal(0)
-        expect(retrievedGame.players[1].betAmount).to.equal(0)
-        expect(retrievedGame.players[2].betAmount).to.equal(0)
+        expect(retrievedGame.players[0].currentStack).to.equal(2075)
+        expect(retrievedGame.players[1].currentStack).to.equal(1475)
+        expect(retrievedGame.players[2].currentStack).to.equal(950)
     })
 
     it('should fail if game does not exist', async () => {
@@ -270,7 +185,7 @@ describe('logic - end-round', () => {
         await Game.deleteMany()
 
         try {
-            await logic.endRound(gameId)
+            await logic.resolveHand(gameId)
         } catch (error) {
             expect(error).to.exist
             expect(error.message).to.equal('Game does not exist.')
@@ -284,7 +199,7 @@ describe('logic - end-round', () => {
         await game.save()
 
         try {
-            await logic.endRound(gameId)
+            await logic.resolveHand(gameId)
         } catch (error) {
             expect(error).to.exist
             expect(error.message).to.equal('Only one player in hand.')
@@ -299,7 +214,7 @@ describe('logic - end-round', () => {
         await game.save()
 
         try {
-            await logic.endRound(gameId)
+            await logic.resolveHand(gameId)
         } catch (error) {
             expect(error).to.exist
             expect(error.message).to.equal('There are no hands dealt yet.')
@@ -310,19 +225,19 @@ describe('logic - end-round', () => {
 
     it('should fail on empty Game ID', () => {
         expect(() =>
-            logic.endRound('')
+            logic.resolveHand('')
         ).to.throw(Error, 'Game ID is empty or blank')
     })
 
     it('should fail on undefined Game ID', () => {
         expect(() =>
-            logic.endRound(undefined)
+            logic.resolveHand(undefined)
         ).to.throw(Error, `Game ID with value undefined is not a valid ObjectId`)
     })
 
     it('should fail on non-valid data type for Game ID', () => {
         expect(() =>
-            logic.endRound('aaaa')
+            logic.resolveHand('aaaa')
         ).to.throw(Error, `Game ID with value aaaa is not a valid ObjectId`)
     })
 
