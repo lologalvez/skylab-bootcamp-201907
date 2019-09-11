@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bro-holdem-data": "file:../bro-holdem-data",
+    "bro-holdem-utils": "file:../bro-holdem-utils",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
