@@ -8,7 +8,7 @@ const { User } = models
 
 const { random } = Math
 
-describe.only('logic - register user', () => {
+describe('logic - register user', () => {
     beforeAll(() => database.connect(REACT_APP_DB_URL_TEST))
 
     let username, email, password, repassword
@@ -37,7 +37,7 @@ describe.only('logic - register user', () => {
     it('should fail if user with same username already exists', async () => {
 
         const newEmail = 'new@email.com'
-        await User.create({ username, newEmail, password })
+        await User.create({ username, email: newEmail, password })
 
         try {
             await registerUser(username, email, password, repassword)
@@ -50,7 +50,7 @@ describe.only('logic - register user', () => {
     it('should fail if user with same email already exists', async () => {
 
         const newUsername = 'newUsername'
-        await User.create({ newUsername, email, password })
+        await User.create({ username: newUsername, email, password })
 
         try {
             await registerUser('differentUsername', email, password, repassword)
@@ -113,7 +113,7 @@ describe.only('logic - register user', () => {
     it('should fail on empty password', () =>
         expect(() =>
             registerUser(username, email, '', '')
-        ).toThrow('password is emkkkpty or blank')
+        ).toThrow('password is empty or blank')
     )
 
     it('should fail on undefined password', () =>

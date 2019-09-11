@@ -17,8 +17,7 @@ function Login({ history }) {
 
     async function handleLogin(email, password) {
         try {
-            const { token } = await logic.authenticateUser(email, password)
-            logic.userCredentials = token
+            await logic.authenticateUser(email, password)
             setCredentials(true)
             history.push('/home')
         } catch (error) {

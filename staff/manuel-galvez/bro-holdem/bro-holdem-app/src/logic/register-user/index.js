@@ -1,7 +1,8 @@
-import validate from 'bro-holdem-utils'
+import { validate } from 'bro-holdem-utils'
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 export default function (username, email, password, repassword) {
 
+    validate.string(username, 'username')
     validate.string(email, 'email')
     validate.email(email, 'email')
     validate.string(password, 'password')

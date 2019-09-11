@@ -60,14 +60,14 @@ function App({ history }) {
 			view, setView, submitRegister, setSubmitRegister, user, setUser,
 			gameId, setGameId, credentials, setCredentials, game, setGame
 		}} >
-			<Route exact path='/' render={() => logic.userCredentials ? history.push('/home') : <Landing />} />
-			<Route path='/home' render={() => logic.userCredentials ? <Home /> : history.push('/')} />
-			<Route path='/register' render={() => logic.userCredentials ? history.push('/home') : <Register />} />
-			<Route path='/register-success' render={() => submitRegister ? <RegisterSuccess /> : history.push('/register')} />
-			<Route path='/login' render={() => logic.userCredentials ? history.push('/home') : <Login />} />
-			<Route path='/host-game' render={() => logic.userCredentials ? <HostGame /> : history.push('/home')} />
-			<Route path='/join-game' render={() => logic.userCredentials ? <JoinGame /> : history.push('/home')} />
-			<Route path='/welcome-table' render={() => game ? <WelcomeTable /> : history.push('/home')} />
+			<Route exact path='/' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Landing />} />
+			<Route path='/home' render={() => logic.isUserLoggedIn() ? <Home /> : history.push('/')} />
+			<Route path='/register' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Register />} />
+			<Route path='/register-success' render={() => isUserLoggedIn() ? <RegisterSuccess /> : history.push('/register')} />
+			<Route path='/login' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Login />} />
+			<Route path='/host-game' render={() => logic.isUserLoggedIn() ? <HostGame /> : history.push('/home')} />
+			<Route path='/join-game' render={() => logic.isUserLoggedIn() ? <JoinGame /> : history.push('/home')} />
+			<Route path='/welcome-table' render={() => logic.isUserLoggedIn() && game ? <WelcomeTable /> : history.push('/home')} />
 		</Context.Provider>
 	)
 }

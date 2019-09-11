@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime": "^7.6.0",
     "bcryptjs": "^2.4.3",
     "bro-holdem-data": "file:../bro-holdem-data",
     "bro-holdem-utils": "file:../bro-holdem-utils",
@@ -14,6 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test-debug": "react-scripts --inspect-brk=3030 test --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -30,5 +32,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "jsonwebtoken": "^8.5.1"
   }
 }
