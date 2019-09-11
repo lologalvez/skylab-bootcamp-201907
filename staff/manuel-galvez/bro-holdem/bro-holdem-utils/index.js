@@ -1,4 +1,5 @@
 module.exports = {
-    registerUser: require('../logic/register-user'),
-    authenticateUser: require('../logic/authenticate-user')
+    validate: require('./validate'),
+    cardDealing: require('./card-dealing'),
+    gameCheck: require('./game-check')
 }
