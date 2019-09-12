@@ -7,6 +7,7 @@ import isUserInGame from './is-user-in-game'
 import hostGame from './host-game'
 import joinGame from './join-game'
 import retrieveGame from './retrieve-game'
+import dealHand from './deal-hand'
 
 
 export default {
@@ -31,6 +32,7 @@ export default {
     retrieveUser,
     hostGame,
     joinGame,
-    retrieveGame
+    retrieveGame,
+    dealHand
 
 }
