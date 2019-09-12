@@ -51,7 +51,8 @@ function App({ history }) {
 					console.log(error.message)
 				}
 			}
-			setInterval(() => asyncRetrieveGame(), 5000)
+			//setInterval(() => asyncRetrieveGame(), 5000)
+			asyncRetrieveGame()
 		}
 	}, [gameId])
 
