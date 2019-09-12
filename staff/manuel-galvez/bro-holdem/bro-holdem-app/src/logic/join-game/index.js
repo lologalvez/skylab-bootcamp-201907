@@ -15,7 +15,9 @@ export default function (gameId) {
             const { error } = await response.json()
             throw Error(error)
         } else {
-            return await response.json()
+            await response.json()
+            this.__gameId__ = gameId
+            return
         }
     })()
 }

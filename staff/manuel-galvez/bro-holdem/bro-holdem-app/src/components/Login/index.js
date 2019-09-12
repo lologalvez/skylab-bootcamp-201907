@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import logic from '../../logic'
 import Context from '../Context'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-function Login({ history }) {
+function Login() {
 
-    const { setSubmitRegister, setCredentials, setSubmitTable } = useContext(Context)
+    const { setSubmitRegister, setCredentials } = useContext(Context)
 
     setSubmitRegister(null)
 
@@ -19,7 +19,6 @@ function Login({ history }) {
         try {
             await logic.authenticateUser(email, password)
             setCredentials(true)
-            history.push('/home')
         } catch (error) {
             console.log(error.message)
         }
@@ -36,4 +35,4 @@ function Login({ history }) {
     </>
 }
 
-export default withRouter(Login)
+export default Login

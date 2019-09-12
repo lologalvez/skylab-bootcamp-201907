@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 
 function RegisterSuccess() {
 
+    const { submitRegister } = useContext(Context)
+
     return <>
         <section>
             <h3>

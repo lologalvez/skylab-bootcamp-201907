@@ -22,14 +22,14 @@ function App({ history }) {
 	const [gameId, setGameId] = useState(null)
 	const [game, setGame] = useState(null)
 
-
 	// Retrieve User
 	useEffect(() => {
-		if (credentials) {
+		if (logic.isUserLoggedIn()) {
 			async function asyncRetrieveUser() {
 				try {
-					const { user: userRetrieved } = await logic.retrieveUser()
+					const userRetrieved = await logic.retrieveUser()
 					await setUser(userRetrieved)
+					history.push('/home')
 				} catch (error) {
 					console.log(error.message)
 				}
@@ -38,13 +38,14 @@ function App({ history }) {
 		}
 	}, [credentials])
 
+
 	// Retrieve Game
 	useEffect(() => {
-		if (gameId) {
+		if (logic.isUserInGame()) {
 			async function asyncRetrieveGame() {
 				try {
 					const { game: gameRetrieved } = await logic.retrieveGame(gameId)
-					await setGame(gameRetrieved)
+					setGame(gameRetrieved)
 					history.push('/welcome-table')
 				} catch (error) {
 					console.log(error.message)
@@ -54,7 +55,6 @@ function App({ history }) {
 		}
 	}, [gameId])
 
-
 	return (
 		<Context.Provider value={{
 			view, setView, submitRegister, setSubmitRegister, user, setUser,
@@ -63,11 +63,11 @@ function App({ history }) {
 			<Route exact path='/' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Landing />} />
 			<Route path='/home' render={() => logic.isUserLoggedIn() ? <Home /> : history.push('/')} />
 			<Route path='/register' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Register />} />
-			<Route path='/register-success' render={() => isUserLoggedIn() ? <RegisterSuccess /> : history.push('/register')} />
+			<Route path='/register-success' render={() => submitRegister ? <RegisterSuccess /> : history.push('/register')} />
 			<Route path='/login' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Login />} />
 			<Route path='/host-game' render={() => logic.isUserLoggedIn() ? <HostGame /> : history.push('/home')} />
 			<Route path='/join-game' render={() => logic.isUserLoggedIn() ? <JoinGame /> : history.push('/home')} />
-			<Route path='/welcome-table' render={() => logic.isUserLoggedIn() && game ? <WelcomeTable /> : history.push('/home')} />
+			<Route path='/welcome-table' render={() => logic.isUserLoggedIn() && logic.isUserInGame() ? <WelcomeTable /> : history.push('/home')} />
 		</Context.Provider>
 	)
 }

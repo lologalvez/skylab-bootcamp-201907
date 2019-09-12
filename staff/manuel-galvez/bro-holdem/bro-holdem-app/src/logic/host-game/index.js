@@ -38,8 +38,7 @@ export default function (name, maxPlayers, initialStack, initialBB, initialSB, b
             throw Error(error)
         }
         const resp = await response.json()
+        this.__gameId__ = resp.gameId
         return resp.gameId
-
-
     })()
 }
