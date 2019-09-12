@@ -8,6 +8,11 @@ import hostGame from './host-game'
 import joinGame from './join-game'
 import retrieveGame from './retrieve-game'
 import dealHand from './deal-hand'
+import actionCall from './action-call'
+import actionCheck from './action-check'
+import actionFold from './action-fold'
+import actionRaise from './action-raise'
+
 
 
 export default {
@@ -33,6 +38,9 @@ export default {
     hostGame,
     joinGame,
     retrieveGame,
-    dealHand
-
+    dealHand,
+    actionCall,
+    actionCheck,
+    actionFold,
+    actionRaise
 }
