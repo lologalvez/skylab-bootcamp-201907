@@ -28,7 +28,7 @@ function App({ history }) {
 			async function asyncRetrieveUser() {
 				try {
 					const userRetrieved = await logic.retrieveUser()
-					await setUser(userRetrieved)
+					setUser(userRetrieved)
 					history.push('/home')
 				} catch (error) {
 					console.log(error.message)
@@ -51,7 +51,7 @@ function App({ history }) {
 					console.log(error.message)
 				}
 			}
-			//setInterval(() => asyncRetrieveGame(), 5000)
+			//setInterval(() => asyncRetrieveGame(), 1000)
 			asyncRetrieveGame()
 		}
 	}, [gameId])
