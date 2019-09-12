@@ -9,7 +9,7 @@ import RegisterSuccess from './Register-Success'
 import Login from './Login'
 import HostGame from './Host-Game'
 import JoinGame from './Join-Game'
-import WelcomeTable from './Welcome-Table'
+import Table from './Table'
 
 
 function App({ history }) {
@@ -44,14 +44,14 @@ function App({ history }) {
 		if (logic.isUserInGame()) {
 			async function asyncRetrieveGame() {
 				try {
-					const { game: gameRetrieved } = await logic.retrieveGame(gameId)
+					const { game: gameRetrieved } = await logic.retrieveGame(logic.__gameId__)
 					setGame(gameRetrieved)
-					history.push('/welcome-table')
+					history.push('/table')
 				} catch (error) {
 					console.log(error.message)
 				}
 			}
-			setInterval(() => asyncRetrieveGame(), 1000)
+			setInterval(() => asyncRetrieveGame(), 5000)
 		}
 	}, [gameId])
 
@@ -67,7 +67,7 @@ function App({ history }) {
 			<Route path='/login' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Login />} />
 			<Route path='/host-game' render={() => logic.isUserLoggedIn() ? <HostGame /> : history.push('/home')} />
 			<Route path='/join-game' render={() => logic.isUserLoggedIn() ? <JoinGame /> : history.push('/home')} />
-			<Route path='/welcome-table' render={() => logic.isUserLoggedIn() && logic.isUserInGame() ? <WelcomeTable /> : history.push('/home')} />
+			<Route path='/table' render={() => logic.isUserLoggedIn() && logic.isUserInGame() ? <Table /> : history.push('/home')} />
 		</Context.Provider>
 	)
 }

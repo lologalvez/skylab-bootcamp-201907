@@ -1,9 +1,14 @@
 import React, { useContext } from 'react'
+import render from 'react-dom'
+import { withRouter } from 'react-router-dom'
 import Context from '../Context'
 import logic from '../../logic'
+import Player from '../Player'
+import Card from '../Card'
 
 
-function WelcomeTable() {
+
+function Table({ history }) {
 
     const { game, user, setGameId } = useContext(Context)
 
@@ -19,7 +24,6 @@ function WelcomeTable() {
     return <>
         {game ?
             <section>
-
                 <h3>
                     <span>Welcome the table {game.name}, {user.username} </span>
                     {(game.host === user.id && game.status !== 'playing') && <button onClick={handleStartGame}>Start game</button>}
@@ -31,34 +35,17 @@ function WelcomeTable() {
                         <li>Game status: {game.status}</li>
                         {game.status === 'playing' &&
                             <>
-                                <li>Card 1: {game.hands[0].tableCards[0].ref}</li>
-                                <li>Card 2: {game.hands[0].tableCards[1].ref}</li>
-                                <li>Card 3: {game.hands[0].tableCards[2].ref}</li>
+                                {game.hands[game.hands.length - 1].tableCards.map(card => <Card card={card} />)}
+                                {game.players.map(player => <Player player={player} hand={game.hands[game.hands.length - 1]} />)}
                             </>
                         }
-                        {game.players.map(player =>
-                            <>
-                                <li><h3>Player {player.position} </h3></li>
-                                {game.status === 'playing' &&
-                                    <>
-                                        <li>Cards: {player.cards[0].ref}</li>
-                                        <li>Cards: {player.cards[1].ref}</li>
-                                    </>
-                                }
-                                <li>Current Stack: {player.currentStack}</li>
-                                <li>Is in hand?: {player.inHand}</li>
-                                <li>Bet amount: {player.betAmount}</li>
-                                <br />
-                            </>
-                        )}
                     </ul>
                 </h3>
             </section>
             :
             setGameId(logic.__gameId__)
         }
-
     </>
-}
 
-export default WelcomeTable
+}
+export default withRouter(Table)
