@@ -10,7 +10,7 @@ function WelcomeTable() {
     async function handleStartGame() {
 
         try {
-            await logic.dealHand()
+            await logic.dealHand(logic.__gameId__)
         } catch (error) {
             console.log(error)
         }
@@ -22,17 +22,29 @@ function WelcomeTable() {
 
                 <h3>
                     <span>Welcome the table {game.name}, {user.username} </span>
-                    {(game.host === user.id) && <button onClick={handleStartGame}>Start game</button>}
+                    {(game.host === user.id && game.status !== 'playing') && <button onClick={handleStartGame}>Start game</button>}
                     <ul>
                         <h3>Table specs</h3>
                         <li>Game name {game.name}</li>
                         <li>Current Big Blind: {game.currentBB}</li>
                         <li>Current Small Blind: {game.currentSB}</li>
                         <li>Game status: {game.status}</li>
+                        {game.status === 'playing' &&
+                            <>
+                                <li>Card 1: {game.hands[0].tableCards[0].ref}</li>
+                                <li>Card 2: {game.hands[0].tableCards[1].ref}</li>
+                                <li>Card 3: {game.hands[0].tableCards[2].ref}</li>
+                            </>
+                        }
                         {game.players.map(player =>
                             <>
                                 <li><h3>Player {player.position} </h3></li>
-                                <li>Cards: {player.cards}</li>
+                                {game.status === 'playing' &&
+                                    <>
+                                        <li>Cards: {player.cards[0].ref}</li>
+                                        <li>Cards: {player.cards[1].ref}</li>
+                                    </>
+                                }
                                 <li>Current Stack: {player.currentStack}</li>
                                 <li>Is in hand?: {player.inHand}</li>
                                 <li>Bet amount: {player.betAmount}</li>
