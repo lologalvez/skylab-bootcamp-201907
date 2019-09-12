@@ -129,7 +129,6 @@ describe.only('logic - action raise', () => {
         const expectedPot = retrievedGame.players.reduce((acc, player) => acc + player.betAmount, 0)
         const highestBet = Math.max.apply(Math, retrievedGame.players.map(key => key.betAmount))
         const lastAction = await Action.find().sort({ _id: -1 }).limit(1)
-        debugger
         expect(retrievedGame.status).toBe('playing')
         expect(retrievedGame.hands[retrievedGame.hands.length - 1].pot).toBe(expectedPot)
         expect(callPlayer.betAmount).toBe(300)

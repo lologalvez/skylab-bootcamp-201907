@@ -81,7 +81,6 @@ describe.only('logic - deal hand', () => {
         expect(game.hands[0].usedCards.length).toBe(7)
         expect(game.hands[0].usedCards.length).toBe(7)
         expect(game.status).toBe('playing')
-        debugger
         expect(String(game.host)).toBe(users[0].id)
     })
 
