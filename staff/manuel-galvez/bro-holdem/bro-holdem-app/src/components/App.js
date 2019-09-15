@@ -11,6 +11,7 @@ import HostGame from './Host-Game'
 import JoinGame from './Join-Game'
 import Table from './Table'
 
+import '../styles/index.css'
 
 function App({ history }) {
 
@@ -46,15 +47,19 @@ function App({ history }) {
 				try {
 					const { game: gameRetrieved } = await logic.retrieveGame(logic.__gameId__)
 					setGame(gameRetrieved)
-					history.push('/table')
+					history.location.pathname !== '/table' && history.push('/table')
 				} catch (error) {
 					console.log(error.message)
 				}
 			}
-			//setInterval(() => asyncRetrieveGame(), 1000)
 			asyncRetrieveGame()
+			//const interval = setInterval(function () { asyncRetrieveGame() }, 1000)
+
+			// Component will mount
+			//return () => clearInterval(interval)
 		}
-	}, [gameId])
+
+	}, [logic.isUserInGame()])
 
 	return (
 		<Context.Provider value={{

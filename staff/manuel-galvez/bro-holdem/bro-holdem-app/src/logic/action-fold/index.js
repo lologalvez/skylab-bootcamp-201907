@@ -14,8 +14,6 @@ export default function (gameId) {
         if (response.status !== 200) {
             const { error } = await response.json()
             throw Error(error)
-        } else {
-            await response.json()
         }
     })()
 }

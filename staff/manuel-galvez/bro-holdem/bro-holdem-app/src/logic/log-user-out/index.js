@@ -1,3 +1,3 @@
 export default function () {
-    sessionStorage.clear()
+    delete sessionStorage.token
 }

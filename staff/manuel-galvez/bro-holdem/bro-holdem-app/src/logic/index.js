@@ -12,7 +12,9 @@ import actionCall from './action-call'
 import actionCheck from './action-check'
 import actionFold from './action-fold'
 import actionRaise from './action-raise'
-
+import leaveGame from './leave-game'
+import updateTurn from './update-turn'
+import retrieveUserId from './retrieve-user-id'
 
 
 export default {
@@ -42,5 +44,8 @@ export default {
     actionCall,
     actionCheck,
     actionFold,
-    actionRaise
+    actionRaise,
+    leaveGame,
+    updateTurn,
+    retrieveUserId
 }

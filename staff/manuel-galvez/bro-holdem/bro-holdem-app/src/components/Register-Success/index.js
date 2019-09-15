@@ -1,11 +1,9 @@
-import React, { useContext } from 'react'
-import Context from '../Context'
+import React  from 'react'
 import { Link } from 'react-router-dom'
 
 
 function RegisterSuccess() {
 
-    const { submitRegister } = useContext(Context)
 
     return <>
         <section>
