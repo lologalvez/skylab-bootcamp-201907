@@ -29,6 +29,7 @@ describe.only('logic - action fold', () => {
 
         await User.deleteMany()
         await Game.deleteMany()
+        await Action.deleteMany()
 
         for (let i = 0; i < 2; i++) {
             username = `username - ${random()} `

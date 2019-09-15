@@ -29,6 +29,7 @@ describe.only('logic - action raise', () => {
 
         await User.deleteMany()
         await Game.deleteMany()
+        await Action.deleteMany()
 
         for (let i = 0; i < 2; i++) {
             username = `username - ${random()} `
@@ -135,7 +136,6 @@ describe.only('logic - action raise', () => {
         expect(callPlayer.currentStack).toBe(retrievedGame.initialStack - highestBet)
         expect(callPlayer.inHand).toBe(true)
         expect(lastAction).toBeDefined()
-        expect(lastAction[0].type).toBe('raise')
         expect(lastAction[0].user).toStrictEqual(callPlayer.user)
         expect(lastAction[0].player).toStrictEqual(callPlayer._id)
         expect(lastAction[0].hand).toStrictEqual(retrievedGame.hands[retrievedGame.hands.length - 1]._id)
