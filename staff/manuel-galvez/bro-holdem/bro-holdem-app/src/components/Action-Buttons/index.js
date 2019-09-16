@@ -51,11 +51,11 @@ function ActionButtons({ hand }) {
     }
 
     return <>
-        <button onClick={handleCall}>Call</button>
-        <button onClick={handleCheck}>Check</button>
-        <button onClick={handleFold}>Fold</button>
+        <button className="action-button" onClick={handleCall}>Call</button>
+        <button className="action-button" onClick={handleCheck}>Check</button>
+        <button className="action-button" onClick={handleFold}>Fold</button>
         <form onSubmit={handleSubmitAmount}>
-            <button>Raise</button>
+            <button className="action-button"  >Raise</button>
             <input type="text" name="raiseAmount"></input>
         </form>
     </>

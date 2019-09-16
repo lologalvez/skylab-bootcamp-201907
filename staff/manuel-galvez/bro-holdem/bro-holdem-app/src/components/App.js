@@ -11,7 +11,7 @@ import HostGame from './Host-Game'
 import JoinGame from './Join-Game'
 import Table from './Table'
 
-import '../styles/index.css'
+import '../styles/index.sass'
 
 function App({ history }) {
 

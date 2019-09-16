@@ -6,22 +6,23 @@ function Player({ player, hand }) {
     return <>
         {player &&
             <>
-            <section className="player" style={{ border: `1px solid ${hand && hand.tunPos === player.position ? 'red': 'black'}` }}>
-                <div className="player__avatar">
-                    <img className="player__img" src="http://localhost:8080/images/ramon.jpg" width="60" height="50"/>
+            <section className="player">
+                <div class="player-details">
+                    <div className={`player-avatar player-avatar--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive' }`}>
+                        <img className="player-avatar__img" src="http://localhost:8080/images/ramon.jpg" width="60" height="50" />
+                    </div>
+                    <div className="player-info">
+                        <div className="player-info__username">{player.user.username}</div>
+                        <div className="player-info__stack">{player.currentStack}</div>
+                    </div>
                 </div>
-                <div className="player__info">
-                    <div className="player__username">{player.user.username}</div>
-                    <div className="player__stack">{player.currentStack}</div>
-                </div>
-                <div className="player__bet">{player.betAmount}</div>
-            {player.cards.length &&
+                {player.cards.length &&
                 <>
                 {player.cards.map(card =>
                     logic.retrieveUserId() === player.user.id ? <Card cardImage={card.image} /> : <Card cardImage={'/images/back.png'} />
                 )}
                 </>
-            }
+                }
             </section>
             </>
         }

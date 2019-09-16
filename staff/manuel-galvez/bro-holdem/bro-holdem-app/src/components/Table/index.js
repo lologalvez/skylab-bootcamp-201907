@@ -34,10 +34,17 @@ function Table({ history }) {
 
     return <>
         {game && user && logic.isUserInGame() ?
-            <section>
+        <>
+        <section class="poker__container">
+            <div class="poker-header">
                 <span>Welcome the table {game.name}, {user.username} </span>
-                {(game.host === user.id && game.status !== 'playing') && <button onClick={handleStartGame}>Start game</button>}
-                <button onClick={handleLeaveGame}>Leave table</button>
+                {(game.host === user.id && game.status !== 'playing') && <button className="poker-header__button" onClick={handleStartGame}>Start game</button>}
+                <button className="poker-header__button" onClick={handleLeaveGame}>Leave table</button>
+            </div>
+            <div class="poker-table">
+                <img className="poker-table__image" src={"./assets/table-nobg-svg-01.svg"} alt="Poker Table" />
+            </div>
+            <section>
                 <ul>
                     <h3>Table specs</h3>
                     <li>Game ID: {logic.__gameId__}</li>
@@ -55,8 +62,10 @@ function Table({ history }) {
                 </ul>
                 <ActionButtons hand={game.hands[game.hands.length - 1]} />
             </section>
-            :
-            setGameId(logic.__gameId__)
+        </section>
+        </>
+        :
+        setGameId(logic.__gameId__)
         }
     </>
 
