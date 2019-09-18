@@ -2,10 +2,11 @@ import React, { useContext } from 'react'
 import logic from '../../logic'
 import Context from '../Context'
 import { Link } from 'react-router-dom'
+import Feedback from '../Feedback'
 
 function Login() {
 
-    const { setSubmitRegister, setCredentials } = useContext(Context)
+    const { setSubmitRegister, setCredentials, feedback, setFeedback } = useContext(Context)
 
     setSubmitRegister(null)
 
@@ -19,8 +20,9 @@ function Login() {
         try {
             await logic.authenticateUser(email, password)
             setCredentials(true)
+            setFeedback(null)
         } catch (error) {
-            console.log(error.message)
+            setFeedback(error.message)
         }
     }
 
@@ -28,6 +30,7 @@ function Login() {
        <div className="landing">
             <div className="landing__split">
                 <section className="card">
+                    <Feedback message={feedback}/>
                     <div className="card__title">
                         <h1>Login</h1>
                     </div>

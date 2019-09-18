@@ -186,5 +186,8 @@ describe.only('logic - action fold', () => {
 
 
 
-    afterAll(() => database.disconnect())
+    afterAll(async () => {
+        await Action.deleteMany()
+        database.disconnect()
+    })
 })

@@ -11,7 +11,7 @@ const { Game, User, Player } = models
 
 const { random } = Math
 
-describe.only('logic - deal hand', () => {
+describe.only('logic - leave game', () => {
     beforeAll(() => database.connect(REACT_APP_DB_URL_TEST))
 
     let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, hostId
@@ -73,8 +73,9 @@ describe.only('logic - deal hand', () => {
         const game = await Game.findById(gameId)
         expect(game).toBeDefined()
         expect(game.id).toBe(gameId)
-        expect(game.players.length).toBe(1)
-        expect(game.players[0].id).not.toBe(userId)
+        expect(game.players.length).toBe(2)
+        const playersInGame = game.players.filter(player => player && player)
+        expect(playersInGame.length).toBe(1)
         const currentHand = game.hands[game.hands.length - 1]
         if (currentHand) expect(game.hands[game.hands.length - 1].turnPos).not.toBe(0)
     })

@@ -17,6 +17,5 @@ export default function (gameId) {
             throw Error(error)
         }
         delete sessionStorage.gameId
-        return
     })()
 }

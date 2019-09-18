@@ -11,7 +11,7 @@ const { Game, User, Player, Hand, Card, Action } = models
 
 const { random } = Math
 
-describe.only('logic - action raise', () => {
+describe('logic - action raise', () => {
     beforeAll(() => database.connect(REACT_APP_DB_URL_TEST))
 
     let name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease, hostId
@@ -136,10 +136,8 @@ describe.only('logic - action raise', () => {
         expect(callPlayer.currentStack).toBe(retrievedGame.initialStack - highestBet)
         expect(callPlayer.inHand).toBe(true)
         expect(lastAction).toBeDefined()
-        expect(lastAction[0].user).toStrictEqual(callPlayer.user)
         expect(lastAction[0].player).toStrictEqual(callPlayer._id)
         expect(lastAction[0].hand).toStrictEqual(retrievedGame.hands[retrievedGame.hands.length - 1]._id)
-        expect(lastAction[0].game).toStrictEqual(retrievedGame._id)
 
     })
 

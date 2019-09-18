@@ -2,11 +2,11 @@ import React, { useContext } from 'react'
 import logic from '../../logic'
 import Context from '../Context'
 import { Link, withRouter } from 'react-router-dom'
-
+import Feedback from '../Feedback'
 
 function JoinGame({ history }) {
 
-    const { setGameId } = useContext(Context)
+    const { setGameId, feedback, setFeedback } = useContext(Context)
 
     function handleSubmit(event) {
         event.preventDefault()
@@ -22,7 +22,7 @@ function JoinGame({ history }) {
             await logic.joinGame(accessKey)
             setGameId(accessKey)
         } catch (error) {
-            console.log(error.message)
+            setFeedback(error.message)
         }
     }
 
@@ -35,6 +35,7 @@ function JoinGame({ history }) {
         <div className="landing">
             <div className="landing__split">
                 <section className="card">
+                    <Feedback message={feedback}/>
                     <div className="card__title">
                         <h2>Join Game</h2>
                     </div>

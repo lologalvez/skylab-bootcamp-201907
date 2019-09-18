@@ -17,7 +17,7 @@ function Player({ player, hand }) {
                 }
                 <div class={`player-details player-details--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive' }`}>
                     <div className="player-avatar">
-                        <img className="player-avatar__img" src={`${REACT_APP_API_PUBLIC}/images/ramon.jpg`} width="60" height="50" />
+                        <img alt="avatar" className="player-avatar__img" src={`${REACT_APP_API_PUBLIC}/images/ramon.jpg`} width="60" height="50" />
                     </div>
                     <div className="player-info">
                         <div className="player-info__username">{player.user.username}</div>

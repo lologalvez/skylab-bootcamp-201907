@@ -20,6 +20,19 @@
     "test-debug": "react-scripts --inspect-brk=3030 test --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
+   "jest": {
+    "watchPathIgnorePatterns": [
+      "src/common"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/components/**/*.js",
+      "!src/index.js",
+      "!src/serviceWorker.js",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/path/to/dir/"
+    ]
+  },
   "eslintConfig": {
     "extends": "react-app"
   },

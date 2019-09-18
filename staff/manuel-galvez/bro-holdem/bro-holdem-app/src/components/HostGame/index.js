@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import logic from '../../logic'
 import Context from '../Context'
 import { Link, withRouter } from 'react-router-dom'
+import Feedback from '../Feedback'
 
 
 function HostGame({ history }) {
 
-    const { setGameId } = useContext(Context)
+    const { setGameId, feedback, setFeedback } = useContext(Context)
 
     function handleSubmit(event) {
         event.preventDefault()
@@ -27,7 +28,7 @@ function HostGame({ history }) {
             const gameId = await logic.hostGame(name, maxPlayers, initialStack, initialBB, initialSB, blindsIncrease)
             setGameId(gameId)
         } catch (error) {
-            console.log(error.message)
+            setFeedback(error.message)
         }
     }
 
@@ -40,6 +41,7 @@ function HostGame({ history }) {
         <div className="landing">
             <div className="landing__split">
                 <section className="card">
+                    <Feedback message={feedback}/>
                     <div className="card__title">
                         <h2>Host Game</h2>
                     </div>

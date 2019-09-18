@@ -23,6 +23,12 @@ function App({ history }) {
 	const [submitRegister, setSubmitRegister] = useState(null)
 	const [gameId, setGameId] = useState(null)
 	const [game, setGame] = useState(null)
+	const [feedback, setFeedback] = useState(null)
+
+	//On reset feedback on navigation
+	useEffect(() => {
+		setFeedback(null)
+	}, [history.location])
 
 	// Retrieve User
 	useEffect(() => {
@@ -38,7 +44,7 @@ function App({ history }) {
 			}
 			asyncRetrieveUser()
 		}
-	}, [credentials])
+	}, [credentials, history])
 
 
 	// Retrieve Game
@@ -50,7 +56,7 @@ function App({ history }) {
 					setGame(gameRetrieved)
 					history.location.pathname !== '/table' && history.push('/table')
 				} catch (error) {
-					console.log(error.message)
+					setFeedback(error.message)
 				}
 			}
 
@@ -61,7 +67,7 @@ function App({ history }) {
 			return () => clearInterval(interval)
 		}
 
-	}, [logic.isUserInGame()])
+	}, [logic.isUserInGame(), history])
 
 	// If user exits the game by closing browser tab
 	window.addEventListener("beforeunload", (event) =>  {
@@ -70,7 +76,7 @@ function App({ history }) {
 			try {
 				await logic.leaveGame(logic.__gameId__)
 			} catch(error) {
-				console.log(error)
+				setFeedback(error.message)
 			}
 		}
 		leaveGameOnTabClose()
@@ -79,7 +85,8 @@ function App({ history }) {
 	return (
 		<Context.Provider value={{
 			view, setView, submitRegister, setSubmitRegister, user, setUser,
-			gameId, setGameId, credentials, setCredentials, game, setGame
+			gameId, setGameId, credentials, setCredentials, game, setGame,
+			feedback, setFeedback
 		}} >
 			<Route exact path='/' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Landing />} />
 			<Route path='/home' render={() => logic.isUserLoggedIn() ? <Home /> : history.push('/')} />

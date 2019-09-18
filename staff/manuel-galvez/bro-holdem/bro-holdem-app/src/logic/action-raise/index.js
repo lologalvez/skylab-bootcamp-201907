@@ -4,7 +4,7 @@ const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 export default function (gameId, raiseTo) {
 
     validate.objectId(gameId, 'Game ID')
-    validate.number(Number(raiseTo), 'Raise amount')
+    validate.number(raiseTo, 'Raise amount')
 
     return (async () => {
         const response = await fetch(`${REACT_APP_API_URL}/games/${gameId}/actions/raise`, {

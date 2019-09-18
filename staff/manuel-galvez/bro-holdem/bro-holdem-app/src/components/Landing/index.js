@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import Register from '../Register'
 
 function Landing({ history }) {
     return <>

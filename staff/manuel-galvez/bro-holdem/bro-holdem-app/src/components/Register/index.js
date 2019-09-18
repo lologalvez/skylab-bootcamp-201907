@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import logic from '../../logic'
 import Context from '../Context'
 import { Link, withRouter } from 'react-router-dom'
+import Feedback from '../Feedback'
 
 
 function Register({ history }) {
 
-    const { setSubmitRegister } = useContext(Context)
+    const { setSubmitRegister, feedback, setFeedback } = useContext(Context)
 
     function handleSubmit(event) {
         event.preventDefault()
@@ -25,8 +26,9 @@ function Register({ history }) {
             await logic.registerUser(username, email, password, repassword)
             setSubmitRegister(true)
             history.push('/register-success')
+            setFeedback(null)
         } catch (error) {
-            console.log(error.message)
+            setFeedback(error.message)
         }
     }
 
@@ -34,6 +36,7 @@ function Register({ history }) {
         <div className="landing">
             <div className="landing__split">
                 <section className="card">
+                    <Feedback message={feedback}/>
                     <div className="card__title">
                         <h1>Register</h1>
                     </div>

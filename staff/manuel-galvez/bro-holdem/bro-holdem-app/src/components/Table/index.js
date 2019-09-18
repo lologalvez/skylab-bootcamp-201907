@@ -5,19 +5,20 @@ import logic from '../../logic'
 import Player from '../Player'
 import Card from '../Card'
 import ActionButtons from '../ActionButtons'
+import Feedback from '../Feedback'
 const REACT_APP_API_PUBLIC = process.env.REACT_APP_API_PUBLIC
 
 
 function Table({ history }) {
 
-    const { game, user, setGameId } = useContext(Context)
+    const { game, user, setGameId, feedback, setFeedback } = useContext(Context)
 
     async function handleStartGame() {
         if (logic.isUserInGame()) {
             try {
                 await logic.dealHand(logic.__gameId__)
             } catch (error) {
-                console.log(error)
+                setFeedback(error.message)
             }
         }
     }
@@ -28,7 +29,7 @@ function Table({ history }) {
                 await logic.leaveGame(logic.__gameId__)
                 history.push('/home')
             } catch (error) {
-                console.log(error)
+                setFeedback(error.message)
             }
         }
     }
@@ -39,14 +40,14 @@ function Table({ history }) {
         <section class="poker__container">
             <div class="poker-header">
                 <div className="poker-header__content">
-                    <div className="poker-header__tableName">Table name: {game.name}</div>
+                    <div className="poker-header__tableName">Game Name: {game.name}</div>
                     <div className="poker-header__gameId">Game ID: {logic.__gameId__}</div>
                 </div>
+                {feedback && <Feedback message={feedback}/>}
                 <div className="poker-header__buttons">
                     {(game.host === user.id && game.status !== 'playing') && <button className="poker-header__button poker-header__button--start" onClick={handleStartGame}>Start game</button>}
                     <button className="poker-header__button poker-header__button--leave" onClick={handleLeaveGame}>Leave table</button>
                 </div>
-                
             </div>
             <div class="poker-table">
                 {game.players.map(player => player && <Player player={player} hand={game.hands[game.hands.length - 1]} />)}
