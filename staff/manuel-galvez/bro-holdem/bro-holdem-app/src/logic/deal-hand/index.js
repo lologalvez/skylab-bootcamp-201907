@@ -16,6 +16,5 @@ export default function (gameId) {
             const { error } = await response.json()
             throw Error(error)
         }
-        return
     })()
 }

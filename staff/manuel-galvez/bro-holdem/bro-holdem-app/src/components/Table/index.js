@@ -4,7 +4,8 @@ import Context from '../Context'
 import logic from '../../logic'
 import Player from '../Player'
 import Card from '../Card'
-import ActionButtons from '../Action-Buttons'
+import ActionButtons from '../ActionButtons'
+const REACT_APP_API_PUBLIC = process.env.REACT_APP_API_PUBLIC
 
 
 function Table({ history }) {
@@ -37,32 +38,37 @@ function Table({ history }) {
         <>
         <section class="poker__container">
             <div class="poker-header">
-                <span>Welcome the table {game.name}, {user.username} </span>
-                {(game.host === user.id && game.status !== 'playing') && <button className="poker-header__button" onClick={handleStartGame}>Start game</button>}
-                <button className="poker-header__button" onClick={handleLeaveGame}>Leave table</button>
+                <div className="poker-header__content">
+                    <div className="poker-header__tableName">Table name: {game.name}</div>
+                    <div className="poker-header__gameId">Game ID: {logic.__gameId__}</div>
+                </div>
+                <div className="poker-header__buttons">
+                    {(game.host === user.id && game.status !== 'playing') && <button className="poker-header__button poker-header__button--start" onClick={handleStartGame}>Start game</button>}
+                    <button className="poker-header__button poker-header__button--leave" onClick={handleLeaveGame}>Leave table</button>
+                </div>
+                
             </div>
             <div class="poker-table">
-                <img className="poker-table__image" src={"./assets/table-nobg-svg-01.svg"} alt="Poker Table" />
+                {game.players.map(player => player && <Player player={player} hand={game.hands[game.hands.length - 1]} />)}
+                {<img className="poker-table__image" src={`${REACT_APP_API_PUBLIC}/images/table-nobg-svg-01.svg`} alt="Poker Table" />}
+                <div className="poker-table__center">
+                    <div className="poker-table__center--specs">
+                        <div className="poker-table__center--pot">Pot: ${game.hands.length && game.hands[game.hands.length - 1].pot}</div>
+                        <div className="poker-table__center--blinds">
+                               <p className="poker-table__center--bb">BB: ${game.currentBB}</p>
+                               <p className="poker-table__center--sb">SB: ${game.currentSB}</p>
+                        </div>
+                    </div>
+                    <div className="poker-table__cards">
+                    {game.hands.length > 0 && game.hands[game.hands.length - 1].tableCards.map(card => game.hands[game.hands.length - 1].round !== 0 ? 
+                        <Card cardImage={card.image} /> 
+                        : 
+                        <Card cardImage={'/images/back.png'} />)}
+                    </div>
+                </div>
             </div>
-            <section>
-                <ul>
-                    <h3>Table specs</h3>
-                    <li>Game ID: {logic.__gameId__}</li>
-                    <li>Game name {game.name}</li>
-                    <li>Current Big Blind: {game.currentBB}</li>
-                    <li>Current Small Blind: {game.currentSB}</li>
-                    <li>Game status: {game.status}</li>
-                    {game.status === 'playing' &&
-                        <>
-                        <li>HAND POT: {game.hands[game.hands.length - 1].pot}</li>
-                        {game.hands[game.hands.length - 1].tableCards.map(card => game.hands[game.hands.length - 1].round !== 0 ? <Card cardImage={card.image} /> : <Card cardImage={'/images/back.png'} />)}
-                        </>
-                    }
-                    {game.players.map(player => player && <Player player={player} hand={game.hands[game.hands.length - 1]} />)}
-                </ul>
-                <ActionButtons hand={game.hands[game.hands.length - 1]} />
-            </section>
         </section>
+        <ActionButtons hand={game.hands[game.hands.length - 1]} game={game} user={user && user} />
         </>
         :
         setGameId(logic.__gameId__)

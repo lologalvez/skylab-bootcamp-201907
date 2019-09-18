@@ -5,15 +5,16 @@ import Context from './Context'
 import Landing from './Landing'
 import Home from './Home'
 import Register from './Register'
-import RegisterSuccess from './Register-Success'
+import RegisterSuccess from './RegisterSuccess'
 import Login from './Login'
-import HostGame from './Host-Game'
-import JoinGame from './Join-Game'
+import HostGame from './HostGame'
+import JoinGame from './JoinGame'
 import Table from './Table'
 
 import '../styles/index.sass'
 
 function App({ history }) {
+
 
 	// States
 	const [view, setView] = useState('landing')
@@ -52,14 +53,28 @@ function App({ history }) {
 					console.log(error.message)
 				}
 			}
-			asyncRetrieveGame()
-			//const interval = setInterval(function () { asyncRetrieveGame() }, 1000)
+
+			//asyncRetrieveGame()
+			const interval = setInterval(function () { asyncRetrieveGame() }, 1000)
 
 			// Component will mount
-			//return () => clearInterval(interval)
+			return () => clearInterval(interval)
 		}
 
 	}, [logic.isUserInGame()])
+
+	// If user exits the game by closing browser tab
+	window.addEventListener("beforeunload", (event) =>  {
+		event.preventDefault();
+		async function leaveGameOnTabClose() {
+			try {
+				await logic.leaveGame(logic.__gameId__)
+			} catch(error) {
+				console.log(error)
+			}
+		}
+		leaveGameOnTabClose()
+	})
 
 	return (
 		<Context.Provider value={{
@@ -70,6 +85,7 @@ function App({ history }) {
 			<Route path='/home' render={() => logic.isUserLoggedIn() ? <Home /> : history.push('/')} />
 			<Route path='/register' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Register />} />
 			<Route path='/register-success' render={() => submitRegister ? <RegisterSuccess /> : history.push('/register')} />
+			<Route path='/register-success' render={() =>  <RegisterSuccess /> } />
 			<Route path='/login' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Login />} />
 			<Route path='/host-game' render={() => logic.isUserLoggedIn() ? <HostGame /> : history.push('/home')} />
 			<Route path='/join-game' render={() => logic.isUserLoggedIn() ? <JoinGame /> : history.push('/home')} />

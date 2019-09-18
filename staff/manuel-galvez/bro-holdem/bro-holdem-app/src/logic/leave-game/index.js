@@ -8,7 +8,7 @@ export default function (gameId) {
 
     return (async () => {
         const response = await fetch(`${REACT_APP_API_URL}/games/${gameId}/players`, {
-            method: 'DELETE',
+            method: 'PATCH',
             headers: { 'authorization': `bearer ${this.__token__}` },
         })
 

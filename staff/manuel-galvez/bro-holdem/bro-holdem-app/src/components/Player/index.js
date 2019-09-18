@@ -1,29 +1,34 @@
 import React from 'react'
 import logic from '../../logic'
 import Card from '../Card'
+const REACT_APP_API_PUBLIC = process.env.REACT_APP_API_PUBLIC
 
 function Player({ player, hand }) {
     return <>
         {player &&
             <>
-            <section className="player">
-                <div class="player-details">
-                    <div className={`player-avatar player-avatar--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive' }`}>
-                        <img className="player-avatar__img" src="http://localhost:8080/images/ramon.jpg" width="60" height="50" />
+            <div className={`player player-position__${player.position}`}>
+            {player.cards.length > 0 &&
+                <div className="player-info__cards">
+                    {player.cards.map(card =>
+                        logic.retrieveUserId() === player.user.id ? <Card cardImage={card.image} /> : <Card cardImage={'/images/back.png'} />
+                    )}
+                </div>
+                }
+                <div class={`player-details player-details--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive' }`}>
+                    <div className="player-avatar">
+                        <img className="player-avatar__img" src={`${REACT_APP_API_PUBLIC}/images/ramon.jpg`} width="60" height="50" />
                     </div>
                     <div className="player-info">
                         <div className="player-info__username">{player.user.username}</div>
-                        <div className="player-info__stack">{player.currentStack}</div>
+                        <div className="player-info__stack">${player.currentStack}</div>
+                        {hand && hand.dealerPos === player.position && <div className="player-info__dealer">Dealer</div>}
+                        {/* {hand && hand.bbPos === player.position && <div className="player-info__bb">BB</div>}
+                        {hand && hand.sbPos === player.position && <div className="player-info__sb">SB</div>} */}
                     </div>
                 </div>
-                {player.cards.length &&
-                <>
-                {player.cards.map(card =>
-                    logic.retrieveUserId() === player.user.id ? <Card cardImage={card.image} /> : <Card cardImage={'/images/back.png'} />
-                )}
-                </>
-                }
-            </section>
+                <div className={`player-info__current-bet player-info__current-bet--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive'}`}>Bet: ${player.betAmount}</div>
+            </div>
             </>
         }
     </>

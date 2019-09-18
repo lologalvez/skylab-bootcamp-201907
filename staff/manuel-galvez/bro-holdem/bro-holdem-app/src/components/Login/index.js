@@ -25,13 +25,25 @@ function Login() {
     }
 
     return <>
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-            <input type="email" name="email" placeholder="Email..." />
-            <input type="password" name="password" placeholder="Password..." />
-            <button>Submit</button>
-        </form>
-        <Link to="/">Go back</Link>
+       <div className="landing">
+            <div className="landing__split">
+                <section className="card">
+                    <div className="card__title">
+                        <h1>Login</h1>
+                    </div>
+                    <form className="form" onSubmit={handleSubmit}>
+                        <input className="form__input" type="text" name="email" placeholder="Email..." />
+                        <input className="form__input" type="password" name="password" placeholder="Password..." />
+                        <div className="card__buttons">
+                            <button className="card__button submit">Submit</button>
+                            <Link className="back__button" to="/"><i className="fas fa-chevron-circle-left"></i></Link>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            <div className="landing__split">
+            </div>
+        </div>
     </>
 }
 
