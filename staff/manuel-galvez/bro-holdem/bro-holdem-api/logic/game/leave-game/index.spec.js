@@ -101,12 +101,14 @@ describe('logic - leave game', () => {
 
     it('should succeed on correct data', async () => {
         const result = await logic.leaveGame(gameId, threeId)
-        expect(result).to.exist
+        expect(result).not.to.exist
         const retrievedGame = await Game.findById(gameId)
         const user = await User.findById(threeId)
-        expect(result.userName).to.equal(user.username)
-        expect(result.gameName).to.equal(retrievedGame.name)
-        expect(retrievedGame.players.length).to.equal(2)
+        expect(retrievedGame.players.length).to.equal(3)
+        const playersInGame = retrievedGame.players.filter(player => player && player )
+        expect(playersInGame.length).to.equal(2)
+        expect(retrievedGame.players.includes(threeId)).to.be.false
+        
     })
 
     it('should fail if game does not exist', async () => {

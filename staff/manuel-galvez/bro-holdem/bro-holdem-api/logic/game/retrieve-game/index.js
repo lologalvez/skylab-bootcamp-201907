@@ -1,5 +1,5 @@
 const { validate } = require('bro-holdem-utils')
-const { models: { Game } } = require('bro-holdem-data')
+const { models: { Game, User } } = require('bro-holdem-data')
 
 /**
 * 
@@ -15,16 +15,21 @@ module.exports = function (gameId) {
     return (async () => {
 
         // Find game
-        const game = await Game.findOne({ _id: gameId }, { _id: 0, __v: 0 }).lean()
+        const game = await Game.findOne({ _id: gameId }, { _id: 0, __v: 0 }).populate('players.user').lean()
         if (!game) throw Error('Game does not exist.')
         game.id = gameId
         game.players.forEach(player => {
-            player.id = String(player._id)
-            delete player._id
+            if (player) {
+                player.id = String(player._id)
+                player.user.id = String(player.user._id)
+                delete player._id
+            }
         })
         game.hands.forEach(hand => {
-            hand.id = String(hand._id)
-            delete hand._id
+            if (hand) {
+                hand.id = String(hand._id)
+                delete hand._id
+            }
         })
         return game
     })()

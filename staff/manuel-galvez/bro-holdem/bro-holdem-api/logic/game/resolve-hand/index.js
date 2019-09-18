@@ -1,4 +1,4 @@
-const { validate, cardDealing } = require('bro-holdem-utils')
+const { validate } = require('bro-holdem-utils')
 const { models: { Game } } = require('bro-holdem-data')
 const { Hand } = require('pokersolver')
 
@@ -19,18 +19,19 @@ module.exports = function (gameId) {
         const game = await Game.findById(gameId)
         if (!game) throw Error('Game does not exist.')
 
-        // Check if enough players
-        if (game.players.length === 1) throw Error('Only one player in hand.')
         const currentHand = game.hands[game.hands.length - 1]
         if (!currentHand) throw Error('There are no hands dealt yet.')
 
-        // Check if round got to final stage
-        if (currentHand.round !== 3) throw Error('River stage not reached yet.')
-
-        if (currentHand.tableCards.length !== 5) throw Error('River card was not dealt yet.')
-
+        // Only one player remaining (the rest folded hand)
         const playersInHand = game.players.filter(player => player.inHand)
+        if (playersInHand.length === 1) {
+            const winnerIndex = game.players.findIndex(player => player.inHand)
+            game.players[winnerIndex].currentStack += currentHand.pot
+            await game.save()
+            return
+        }
 
+        // 1+ player reaiming (got to river)
         const handsMixed = playersInHand.map((player, idx) => {
             if (player.inHand)
                 return ({ playerIndex: idx, cards: Array(...player.cards.map(card => card.ref), ...currentHand.tableCards.map(card => card.ref)) })

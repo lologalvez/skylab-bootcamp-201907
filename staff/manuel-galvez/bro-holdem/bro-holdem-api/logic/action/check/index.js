@@ -1,6 +1,6 @@
 const { validate } = require('bro-holdem-utils')
-const { gameCheck } = require('bro-holdem-utils')
 const { models: { Action } } = require('bro-holdem-data')
+const gameCheck = require('../../game/game-check')
 /**
 * 
 * @param {*} gameId 
@@ -42,25 +42,7 @@ module.exports = function (gameId, userId) {
         action.hand = currentHand.id
 
         await action.save()
-
-        // End of round check (utils)
-        const lastBet = player.betAmount
-        if (player.position === currentHand.endPos) {
-            const endOfRound = game.players.every(player => player.inHand && player.betAmount === lastBet)
-            if (endOfRound) {
-                console.log('End of round')
-                /* 
-                - Update hand.round
-                - Set all players betAmount to 0
-                - Deal new card to hand.tableCards (and usedCards)
-                - Reset turnPos to first after dealer that is in_hand 
-                - Check if hand is over
-                - Check if blinds must be be increased (optional)
-                */
-            }
-        }
-
-        // If not round end, move turn position
+        return
 
     })()
 }

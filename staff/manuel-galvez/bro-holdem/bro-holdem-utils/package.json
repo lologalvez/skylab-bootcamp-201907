@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bro-holdem-data": "../bro-holdem-data"
+    "mongoose": "^5.7.0"
   }
 }

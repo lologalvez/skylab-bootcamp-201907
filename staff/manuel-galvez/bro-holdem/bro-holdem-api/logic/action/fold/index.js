@@ -1,6 +1,6 @@
 const { validate } = require('bro-holdem-utils')
-const { gameCheck } = require('bro-holdem-utils')
 const { models: { Action } } = require('bro-holdem-data')
+const gameCheck = require('../../game/game-check')
 
 /**
 * 
@@ -42,6 +42,7 @@ module.exports = function (gameId, userId) {
         action.hand = currentHand.id
 
         await Promise.all([action.save(), game.save()])
+        return
 
     })()
 }

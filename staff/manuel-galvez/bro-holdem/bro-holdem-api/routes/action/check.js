@@ -6,9 +6,7 @@ module.exports = async function (req, res) {
 
     try {
         await logic.check(gameId, userId)
-        // const { userName, gameName } = await logic.call(gameId, userId)
-        res.status(200).json({ message: `Successful check` })
-        //res.status(200).json({ message: `${userName} checked and keeps playing hand in ${ gameName }.` })
+        res.sendStatus(200)
     } catch ({ message }) {
         res.status(400).json({ error: message })
     }

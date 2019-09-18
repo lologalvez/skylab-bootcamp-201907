@@ -40,8 +40,8 @@ describe('logic - deal hand', () => {
         name = `gameName-${Math.random()}`
         maxPlayers = Number((Math.random() * (6 - 4) + 4).toFixed())
         initialStack = Number((Math.random() * (1500 - 1000) + 1000).toFixed())
-        initialBB = Number((Math.random() * (50 - 25) + 25).toFixed())
-        initialSB = Number((Math.random() * (50 - 25) + 25).toFixed())
+        initialBB = 50
+        initialSB = 25
         blindsIncrease = Number(Math.random().toFixed())
 
 
@@ -106,7 +106,7 @@ describe('logic - deal hand', () => {
         expect(result).to.equal(retrievedGame.name)
         expect(retrievedGame.status).to.equal('playing')
         expect(retrievedGame.hands.length).to.equal(1)
-        expect(retrievedGame.hands[0].pot).to.equal(0)
+        expect(retrievedGame.hands[0].pot).to.equal(75)
         expect(retrievedGame.hands[0].dealerPos).to.equal(0)
         expect(retrievedGame.hands[0].bbPos).to.equal(2)
         expect(retrievedGame.hands[0].sbPos).to.equal(1)

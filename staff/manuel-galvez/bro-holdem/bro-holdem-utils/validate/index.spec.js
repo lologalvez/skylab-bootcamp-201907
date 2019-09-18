@@ -1,4 +1,3 @@
-require('dotenv').config()
 const validate = require('./index')
 const { expect } = require('chai')
 
