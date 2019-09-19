@@ -22,6 +22,7 @@ module.exports = function (gameId) {
         const currentHand = game.hands[game.hands.length - 1]
         if (!currentHand) throw Error('There are no hands dealt yet.')
 
+        debugger
         // Only one player remaining (the rest folded hand)
         const playersInHand = game.players.filter(player => player.inHand)
         if (playersInHand.length === 1) {
@@ -31,10 +32,11 @@ module.exports = function (gameId) {
             return
         }
 
-        // 1+ player reaiming (got to river)
-        const handsMixed = playersInHand.map((player, idx) => {
+        // 1+ player remaining (got to river)
+        debugger
+        const handsMixed = playersInHand.map((player) => {
             if (player.inHand)
-                return ({ playerIndex: idx, cards: Array(...player.cards.map(card => card.ref), ...currentHand.tableCards.map(card => card.ref)) })
+                return ({ playerIndex: player.position, cards: Array(...player.cards.map(card => card.ref), ...currentHand.tableCards.map(card => card.ref)) })
         })
 
         const solvedHands = handsMixed.map(hand => Hand.solve(hand.cards))

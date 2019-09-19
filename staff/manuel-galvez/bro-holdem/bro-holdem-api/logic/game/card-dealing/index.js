@@ -7,7 +7,7 @@ async function cardDealing(destArray, numberOfCards, usedCards) {
     for (i = 0; i < numberOfCards; i++) {
         do {
             randomCard = await Card.aggregate([{ $sample: { size: 1 } }])
-            match = usedCards.includes(randomCard[0])
+            match = usedCards.some(card => card.ref === randomCard[0].ref)
         } while (match)
         destArray.push(randomCard[0])
         usedCards.push(randomCard[0])

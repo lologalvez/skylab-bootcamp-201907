@@ -5,7 +5,6 @@ module.exports = async function (req, res) {
     const { params: { gameId }, userId } = req
 
     try {
-        debugger
         await logic.fold(gameId, userId)
         res.sendStatus(200)
     } catch ({ message }) {

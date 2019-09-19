@@ -32,14 +32,14 @@ module.exports = function (gameId, userId, raiseTo) {
         //if (highestBet >= raiseTo) throw Error('Raise bet cannot be less than highest bet on table.')
 
         // Amount to be called
-        const raiseAmount = raiseTo - player.betAmount
+        const raiseAmount = raiseTo + player.betAmount
 
         // Update player stack
-        player.currentStack -= raiseAmount
-        player.betAmount = raiseTo
+        player.currentStack -= raiseTo
+        player.betAmount = raiseAmount
 
         // Update hand's pot and end position
-        currentHand.pot += raiseAmount
+        currentHand.pot += raiseTo
 
         // Update end position counting counter-clockwise 
         player.position - 1 < 0 ? start = game.players.length - 1 : start = player.position - 1
