@@ -17,14 +17,14 @@ function Player({ player, hand }) {
                 }
                 <div class={`player-details player-details--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive' }`}>
                     <div className="player-avatar">
-                        <img alt="avatar" className="player-avatar__img" src={`${REACT_APP_API_URL_PUBLIC}/images/ramon.jpg`} width="60" height="50" />
+                        <img alt="avatar" className="player-avatar__img" src={player.user.avatar ? `${REACT_APP_API_URL_PUBLIC}${player.user.avatar}`: `${REACT_APP_API_URL_PUBLIC}/images/default-avatar.png`} width="60" height="50" />
                     </div>
                     <div className="player-info">
                         <div className="player-info__username">{player.user.username}</div>
                         <div className="player-info__stack">${player.currentStack}</div>
                         {hand && hand.dealerPos === player.position && <div className="player-info__dealer">Dealer</div>}
-                        {/* {hand && hand.bbPos === player.position && <div className="player-info__bb">BB</div>}
-                        {hand && hand.sbPos === player.position && <div className="player-info__sb">SB</div>} */}
+                        {hand && hand.bbPos === player.position && <div className="player-info__bb">BB</div>}
+                        {hand && hand.sbPos === player.position && <div className="player-info__sb">SB</div>}
                     </div>
                 </div>
                 <div className={`player-info__current-bet player-info__current-bet--${(hand && hand.turnPos === player.position) ? 'active' : 'inactive'}`}>Bet: ${player.betAmount}</div>
