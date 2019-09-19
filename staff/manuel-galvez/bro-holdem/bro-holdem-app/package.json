@@ -20,7 +20,7 @@
     "test-debug": "react-scripts --inspect-brk=3030 test --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
-   "jest": {
+  "jest": {
     "watchPathIgnorePatterns": [
       "src/common"
     ],

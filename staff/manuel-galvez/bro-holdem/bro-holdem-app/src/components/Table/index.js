@@ -6,7 +6,7 @@ import Player from '../Player'
 import Card from '../Card'
 import ActionButtons from '../ActionButtons'
 import Feedback from '../Feedback'
-const REACT_APP_API_PUBLIC = process.env.REACT_APP_API_PUBLIC
+const REACT_APP_API_URL_PUBLIC = process.env.REACT_APP_API_URL_PUBLIC
 
 
 function Table({ history }) {
@@ -51,7 +51,7 @@ function Table({ history }) {
             </div>
             <div class="poker-table">
                 {game.players.map(player => player && <Player player={player} hand={game.hands[game.hands.length - 1]} />)}
-                {<img className="poker-table__image" src={`${REACT_APP_API_PUBLIC}/images/table-nobg-svg-01.svg`} alt="Poker Table" />}
+                {<img className="poker-table__image" src={`${REACT_APP_API_URL_PUBLIC}/images/table-nobg-svg-01.svg`} alt="Poker Table" />}
                 <div className="poker-table__center">
                     <div className="poker-table__center--specs">
                         <div className="poker-table__center--pot">Pot: ${game.hands.length && game.hands[game.hands.length - 1].pot}</div>

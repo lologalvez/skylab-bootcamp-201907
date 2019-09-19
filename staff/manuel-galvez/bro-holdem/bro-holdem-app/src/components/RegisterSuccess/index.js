@@ -1,10 +1,8 @@
 import React  from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 
-function RegisterSuccess() {
-
-
+function RegisterSuccess({ history }) {
     return <>
       <div className="landing">
             <div className="landing__split">
@@ -17,14 +15,7 @@ function RegisterSuccess() {
             <div className="landing__split">
             </div>
         </div>
-        <section>
-            <h3>
-                <span>Thanks for joining </span>
-                <span>Bro Holdem.</span>
-                <span>Please, proceed to </span>
-            </h3>
-        </section>
     </>
 }
 
-export default RegisterSuccess
+export default withRouter(RegisterSuccess)

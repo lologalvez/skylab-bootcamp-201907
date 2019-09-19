@@ -1,8 +1,9 @@
 import { validate } from 'bro-holdem-utils'
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
-export default function (gameId, raiseTo) {
+export default function (gameId, raise) {
 
+    const raiseTo = Number(raise)
     validate.objectId(gameId, 'Game ID')
     validate.number(raiseTo, 'Raise amount')
 

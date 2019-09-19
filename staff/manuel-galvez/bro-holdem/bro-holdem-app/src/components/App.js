@@ -92,7 +92,6 @@ function App({ history }) {
 			<Route path='/home' render={() => logic.isUserLoggedIn() ? <Home /> : history.push('/')} />
 			<Route path='/register' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Register />} />
 			<Route path='/register-success' render={() => submitRegister ? <RegisterSuccess /> : history.push('/register')} />
-			<Route path='/register-success' render={() =>  <RegisterSuccess /> } />
 			<Route path='/login' render={() => logic.isUserLoggedIn() ? history.push('/home') : <Login />} />
 			<Route path='/host-game' render={() => logic.isUserLoggedIn() ? <HostGame /> : history.push('/home')} />
 			<Route path='/join-game' render={() => logic.isUserLoggedIn() ? <JoinGame /> : history.push('/home')} />

@@ -15,6 +15,7 @@ function ActionButtons({ hand, game, user }) {
             const { stage } = await logic.updateTurn(logic.__gameId__)
             if (stage === 'Hand') await logic.dealHand(logic.__gameId__)
             setFeedback(null)
+            setBet('')
         } catch (error) {
             setFeedback(error.message)
         }
@@ -26,6 +27,7 @@ function ActionButtons({ hand, game, user }) {
             const { stage } = await logic.updateTurn(logic.__gameId__)
             if (stage === 'Hand') await logic.dealHand(logic.__gameId__)
             setFeedback(null)
+            setBet('')
         } catch (error) {
             setFeedback(error.message)
         }
@@ -43,6 +45,7 @@ function ActionButtons({ hand, game, user }) {
             const { stage } = await logic.updateTurn(logic.__gameId__)
             if (stage === 'Hand') await logic.dealHand(logic.__gameId__)
             setFeedback(null)
+            setBet('')
         } catch (error) {
             setFeedback(error.message)
         }
@@ -55,6 +58,7 @@ function ActionButtons({ hand, game, user }) {
             const { stage } = await logic.updateTurn(logic.__gameId__)
             if (stage === 'Hand') await logic.dealHand(logic.__gameId__)
             setFeedback(null)
+            setBet('')
         } catch (error) {
             setFeedback(error.message)
         }

@@ -7,7 +7,12 @@ function Landing({ history }) {
             <div className="landing__split">
                 <section className="card">
                     <div className="card__title">
-                        <h1>Bro Holdem</h1>
+                        <div className="card__logo">
+                            <img src="/logo192.png"></img>
+                        </div>
+                        <div className="card__company">
+                            <h1>BRO HOLDEM</h1>
+                        </div>
                     </div>
                     <div className="card__buttons">
                         <Link className="card__button card__button--login" to="/login">Login</Link>
